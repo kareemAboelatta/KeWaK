@@ -1,4 +1,4 @@
-package com.example.kewaapp.presentation
+package com.example.kewaapp.common.ui
 
 
 import android.os.Bundle
@@ -11,10 +11,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.example.kewaapp.domain.entities.User
-import com.example.kewaapp.presentation.screens.auth.AuthScreen
-import com.example.kewaapp.presentation.screens.LandingScreen
-import com.example.kewaapp.presentation.theme.KewaAppTheme
+import com.example.kewaapp.common.domain.entities.User
+import com.example.kewaapp.auth.presentation.screens.auth.AuthScreen
+import com.example.kewaapp.auth.presentation.screens.LandingScreen
+import com.example.kewaapp.common.ui.theme.KewaAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

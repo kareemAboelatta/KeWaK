@@ -1,4 +1,4 @@
-package com.example.kewaapp.domain.entities
+package com.example.kewaapp.common.domain.entities
 
 data class User(
     val id:String = "",

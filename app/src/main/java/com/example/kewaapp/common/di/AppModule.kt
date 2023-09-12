@@ -1,6 +1,6 @@
-package com.example.kewaapp.di
+package com.example.kewaapp.common.di
 
-import com.example.kewaapp.domain.entities.User
+import com.example.kewaapp.common.domain.entities.User
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,7 +11,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
 
     @Provides
     @Singleton

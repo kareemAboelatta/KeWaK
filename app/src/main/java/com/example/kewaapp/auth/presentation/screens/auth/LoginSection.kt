@@ -1,4 +1,4 @@
-package com.example.kewaapp.presentation.screens.auth
+package com.example.kewaapp.auth.presentation.screens.auth
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Column
@@ -7,14 +7,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.outlined.Email
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,12 +20,15 @@ import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.kewaapp.presentation.theme.KewaAppTheme
+import com.example.kewaapp.common.ui.components.AppTextField
+import com.example.kewaapp.common.ui.components.PasswordTextField
+import com.example.kewaapp.common.ui.theme.KewaAppTheme
 
 
 @Preview(
@@ -45,9 +44,6 @@ fun LoginSectionPreview() {
     }
 }
 
-
-
-
 @Composable
 fun LoginSection() {
 
@@ -56,17 +52,21 @@ fun LoginSection() {
     Column(
         Modifier
             .fillMaxWidth()
-            .padding(20.dp),
+            .padding(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AppTextField(
+            modifier = Modifier
+                .fillMaxWidth(),
             text = state.email,
             hint = "Email",
             imageVector = Icons.Outlined.Email,
             onValueChange = {
                 state.updateEmail(it)
             })
-        AppTextField(
+        PasswordTextField(
+            modifier = Modifier
+                .fillMaxWidth(),
             text = state.password,
             hint = "Password",
             imageVector = Icons.Filled.Lock,
@@ -74,50 +74,30 @@ fun LoginSection() {
                 state.updatePassword(it)
             }
         )
-        Spacer(modifier = Modifier.height(10.dp))
+
+        Text(
+            modifier = Modifier
+                .align(End)
+                .padding(5.dp),
+            text = "Forget Password",
+            style = MaterialTheme.typography.labelLarge
+        )
+        Spacer(modifier = Modifier.height(20.dp))
         OutlinedButton(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp)
-                .padding(horizontal = 10.dp)
-            ,
+                .fillMaxWidth(),
             onClick = {
                 //viewModel.login()
             }
         ) {
-            Text(text = "Login")
+            Text(
+                text = "Login",
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.SansSerif
+            )
         }
     }
-}
-
-
-@Composable
-fun AppTextField(
-    text: String,
-    hint: String,
-    modifier: Modifier = Modifier,
-    onValueChange: (String) -> Unit,
-    textStyle: TextStyle = MaterialTheme.typography.displayMedium,
-    singleLine: Boolean = true,
-    imageVector: ImageVector = Icons.Filled.Info
-) {
-    OutlinedTextField(
-        modifier = modifier,
-        value = text,
-        textStyle = textStyle,
-        onValueChange = {
-            onValueChange(it)
-        },
-        label = {
-            Text(text = hint)
-        },
-        singleLine = singleLine,
-        leadingIcon = {
-            Icon(imageVector = imageVector, contentDescription = "")
-        },
-
-
-    )
 }
 
 

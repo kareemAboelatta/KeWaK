@@ -1,6 +1,6 @@
 
 
-package com.example.kewaapp.presentation.theme
+package com.example.kewaapp.common.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
