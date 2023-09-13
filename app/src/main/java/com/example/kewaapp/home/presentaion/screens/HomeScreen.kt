@@ -1,14 +1,13 @@
 package com.example.kewaapp.home.presentaion.screens
 
-import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -17,11 +16,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -40,6 +44,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -59,10 +64,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xfffff
-)
+@Preview()
+@Composable
+fun HomeScreenPreview(){
+    KewaAppTheme {
+        HomeScreen()
+    }
+}
+
+
 @Composable
 fun HomeScreen() {
     Column (
@@ -70,7 +80,12 @@ fun HomeScreen() {
     ){
 
         Header("For You", imageVector = Icons.Filled.AccountCircle)
-        FavoriteSubjectsGrid()
+        ForYouSubjectsGrid()
+        Spacer(modifier = Modifier.height(10.dp))
+        Header("Recently Viewed", imageVector = Icons.Filled.Menu)
+        Spacer(modifier = Modifier.height(5.dp))
+
+        RecentSubjectsGrid()
 
     }
 }
@@ -210,11 +225,11 @@ fun Header(
             contentDescription = null,
             modifier = Modifier.size(size = IconSize)
         )
+        Spacer(modifier = Modifier.width(10.dp))
         Text(
             text = title,
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
-
             )
     }
 }
@@ -222,7 +237,7 @@ fun Header(
 
 // Step: Favorite collections grid - LazyGrid
 @Composable
-fun FavoriteSubjectsGrid(
+fun ForYouSubjectsGrid(
     modifier: Modifier = Modifier
 ) {
     LazyHorizontalGrid(
@@ -233,6 +248,23 @@ fun FavoriteSubjectsGrid(
     ) {
         itemsIndexed(subjects) { _, item ->
             SubjectCard(
+                modifier = Modifier.fillMaxHeight(),
+                drawable = item.image,
+                text = item.name,
+            )
+        }
+    }
+}
+@Composable
+fun RecentSubjectsGrid(
+    modifier: Modifier = Modifier
+) {
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = modifier
+    ) {
+        itemsIndexed(subjects.reversed()) { _, item ->
+            RecentlySubjectCard(
                 modifier = Modifier.fillMaxHeight(),
                 drawable = item.image,
                 text = item.name,
@@ -287,7 +319,43 @@ fun SubjectCard(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 text = text,
                 style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.SansSerif,
+                fontSize = 20.sp
+
+                )
+        }
+    }
+}@Composable
+fun RecentlySubjectCard(
+    @DrawableRes drawable: Int,
+    text: String,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+    ) {
+        Column(
+            modifier = Modifier,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                modifier = Modifier
+                    .size(120.dp)
+                    .clip(CircleShape),
+                painter = painterResource(drawable),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
             )
+            Spacer(modifier = Modifier.height(5.dp))
+            Text(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                text = text,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.SansSerif,
+                fontSize = 20.sp
+                )
         }
     }
 }
