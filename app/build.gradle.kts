@@ -113,5 +113,10 @@ dependencies {
 
 
 
+    implementation("androidx.graphics:graphics-core:1.0.0-alpha05")
+    implementation("androidx.graphics:graphics-path:1.0.0-alpha02")
+    implementation("androidx.graphics:graphics-shapes:1.0.0-alpha03")
+
+
 
 }
