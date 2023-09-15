@@ -50,11 +50,11 @@ private fun getNames() = List(51) { i -> "Kareem # $i" }
 
 
 
-@Preview
 @Composable
 fun TextShapes() {
 
     Box(modifier = Modifier
+        .rotate(45.0F)
         .size(100.dp)
         .padding(5.dp)
         .drawWithContent {
@@ -83,21 +83,12 @@ fun TextShapes() {
                 }
                 .background(color = Color.Cyan)
         )
-
     }
 }
 
-
-
-
-
-
-
-
+@Preview
 @Composable
 fun HexagonList() {
-
-
 
 
 
@@ -115,20 +106,32 @@ fun HexagonList() {
 
 }
 
-
 @Composable
 fun HexagonItem(name: String = "Kareem", index: Int) {
     Box(
         Modifier.fillMaxWidth(),
         contentAlignment = if (index % 2 == 0) Alignment.CenterStart else Alignment.CenterEnd
     ) {
+        val color = MaterialTheme.colorScheme.primary
+
         Box(
             modifier = Modifier
                 .rotate(90f)
-                .fillMaxWidth(0.62f)
+                .fillMaxWidth(0.6f)
                 .height(185.dp)
-                .clip(hexagonShape)
-                .background(MaterialTheme.colorScheme.primary),
+                .drawWithContent {
+                    drawContent()
+                    drawPath(
+                        path = drawCustomHexagonPath(size),
+                        color = color,
+                        style = Stroke(
+                            width = 10.dp.toPx(),
+                            pathEffect = PathEffect.cornerPathEffect(40f)
+                        )
+                    )
+                }
+                .wrapContentSize()
+            ,
             contentAlignment = Alignment.Center
         ) {
 
@@ -136,10 +139,16 @@ fun HexagonItem(name: String = "Kareem", index: Int) {
                 modifier = Modifier
                     .rotate(-90f)
             ) {
-                Text(
-                    text = name,
-                    style = MaterialTheme.typography.titleMedium.copy(color = Color.White)
-                )
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                ){
+                    Text(
+                        text = name,
+                        style = MaterialTheme.typography.titleMedium.copy(color = Color.White)
+                    )
+                }
+
             }
         }
     }
@@ -147,7 +156,6 @@ fun HexagonItem(name: String = "Kareem", index: Int) {
 
 
 val hexagonShape = HexagonShape()
-
 class HexagonShape : Shape {
 
     override fun createOutline(
