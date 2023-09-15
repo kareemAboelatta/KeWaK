@@ -34,8 +34,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.graphics.shapes.RoundedPolygon
-import androidx.graphics.shapes.*
 import com.example.kewaapp.R
 import com.example.kewaapp.common.ui.theme.KewaAppTheme
 import kotlin.math.min
