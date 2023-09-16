@@ -52,7 +52,8 @@ fun GradientButton(
         onClick = onClick,
         contentPadding = PaddingValues(), colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent
-        ), shape = RoundedCornerShape(cornerRadius)
+        ),
+        shape = RoundedCornerShape(cornerRadius)
     ) {
         Box(
             modifier = Modifier
