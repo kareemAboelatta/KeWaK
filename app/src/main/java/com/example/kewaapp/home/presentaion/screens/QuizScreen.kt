@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.kewaapp.R
 import com.example.kewaapp.common.ui.common.PaddingDimensions
+import com.example.kewaapp.common.ui.components.GradientButton
 import com.example.kewaapp.common.ui.theme.KewaAppTheme
 
 
@@ -105,68 +106,20 @@ fun QuizScreen() {
 
 
                 val gradientColor = listOf(
-                    MaterialTheme.colorScheme.onBackground,
+                    MaterialTheme.colorScheme.tertiary,
                     MaterialTheme.colorScheme.secondary,
                     MaterialTheme.colorScheme.primary,
                 )
                 GradientButton(
+                    modifier= Modifier.padding(horizontal = 20.dp),
                     gradientColors = gradientColor,
-                    cornerRadius = 20.dp,
-                    nameButton = "Style: top Start",
-                    roundedCornerShape = CircleShape
+                    text = "Start Quiz",
+                    onClick = {}
                 )
             }
         }
     }
 }
-
-@Composable
-private fun GradientButton(
-    modifier: Modifier = Modifier,
-    gradientColors: List<Color>,
-    cornerRadius: Dp,
-    nameButton: String,
-    roundedCornerShape: RoundedCornerShape
-) {
-
-    Button(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 32.dp, end = 32.dp)
-            .shadow(
-                elevation = 10.dp,
-                spotColor = MaterialTheme.colorScheme.tertiary,
-                ambientColor = MaterialTheme.colorScheme.tertiary
-            ), onClick = {
-            //your code
-        },
-
-        contentPadding = PaddingValues(), colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Transparent
-        ), shape = RoundedCornerShape(cornerRadius)
-    ) {
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    brush = Brush.horizontalGradient(colors = gradientColors),
-                    shape = roundedCornerShape
-                )
-                .clip(roundedCornerShape)/*.background(
-                    brush = Brush.linearGradient(colors = gradientColors),
-                    shape = RoundedCornerShape(cornerRadius)
-                )*/
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = nameButton, fontSize = 20.sp, color = Color.White
-            )
-        }
-    }
-}
-
 
 @Preview(
     uiMode = UI_MODE_NIGHT_YES
@@ -232,7 +185,7 @@ fun ProfileCard() {
                 modifier = Modifier
                     .size(100.dp)
                     .shadow(
-                        elevation = 10.dp,
+                        elevation = 20.dp,
                         spotColor = MaterialTheme.colorScheme.tertiary,
                         shape = CircleShape,
                         ambientColor = MaterialTheme.colorScheme.tertiary
