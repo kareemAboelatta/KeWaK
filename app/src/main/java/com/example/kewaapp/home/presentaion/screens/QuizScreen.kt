@@ -15,15 +15,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -35,11 +36,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.kewaapp.R
 import com.example.kewaapp.common.ui.common.PaddingDimensions
 import com.example.kewaapp.common.ui.theme.KewaAppTheme
@@ -52,21 +54,20 @@ import com.example.kewaapp.common.ui.theme.KewaAppTheme
 @Composable
 fun QuizAppBar() {
     KewaAppTheme {
-        TopAppBar(
-            actions = {
+        TopAppBar(actions = {
+            IconButton(modifier = Modifier.padding(5.dp), onClick = {
+
+            }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_menu),
                     contentDescription = "Menu"
                 )
-            },
-            title = {},
-            navigationIcon = {
-                Icon(
-                    imageVector = Icons.Filled.Settings,
-                    contentDescription = ""
-                )
             }
-        )
+        }, title = {}, navigationIcon = {
+            Icon(
+                imageVector = Icons.Filled.Settings, contentDescription = ""
+            )
+        })
     }
 
 }
@@ -78,8 +79,7 @@ fun QuizAppBar() {
 fun QuizScreen() {
     KewaAppTheme {
         Scaffold(
-            topBar = { QuizAppBar() },
-            containerColor = MaterialTheme.colorScheme.background
+            topBar = { QuizAppBar() }, containerColor = MaterialTheme.colorScheme.background
         ) {
             Column(
                 Modifier
@@ -96,49 +96,73 @@ fun QuizScreen() {
                 )
                 ProfileCard()
                 Image(
-                    modifier =Modifier.fillMaxSize(
+                    modifier = Modifier.fillMaxSize(
                         0.7f
                     ),
                     painter = painterResource(id = R.drawable.online_edu),
-                    contentDescription =null
-                )
-
-                val horizontalGradientBrush = Brush.horizontalGradient(
-                    colors = listOf(
-                        Color(0xffF57F17),
-                        Color(0xffFFEE58),
-                        Color(0xffFFF9C4)
-                    )
+                    contentDescription = null
                 )
 
 
-                GradientButton(text = "Kareem", gradient = horizontalGradientBrush)
+                val gradientColor = listOf(
+                    MaterialTheme.colorScheme.onBackground,
+                    MaterialTheme.colorScheme.secondary,
+                    MaterialTheme.colorScheme.primary,
+                )
+                GradientButton(
+                    gradientColors = gradientColor,
+                    cornerRadius = 20.dp,
+                    nameButton = "Style: top Start",
+                    roundedCornerShape = CircleShape
+                )
             }
         }
     }
 }
 
-
 @Composable
-fun GradientButton(
-    text: String,
-    gradient : Brush,
+private fun GradientButton(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = { },
+    gradientColors: List<Color>,
+    cornerRadius: Dp,
+    nameButton: String,
+    roundedCornerShape: RoundedCornerShape
 ) {
+
     Button(
-        modifier = modifier,
-        colors = ButtonDefaults.buttonColors( Color.Transparent),
-        contentPadding = PaddingValues(),
-        onClick = { onClick() },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 32.dp, end = 32.dp)
+            .shadow(
+                elevation = 10.dp,
+                spotColor = MaterialTheme.colorScheme.tertiary,
+                ambientColor = MaterialTheme.colorScheme.tertiary
+            ), onClick = {
+            //your code
+        },
+
+        contentPadding = PaddingValues(), colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Transparent
+        ), shape = RoundedCornerShape(cornerRadius)
     ) {
+
         Box(
             modifier = Modifier
-                .background(gradient)
-                .then(modifier),
-            contentAlignment = Alignment.Center,
+                .fillMaxWidth()
+                .background(
+                    brush = Brush.horizontalGradient(colors = gradientColors),
+                    shape = roundedCornerShape
+                )
+                .clip(roundedCornerShape)/*.background(
+                    brush = Brush.linearGradient(colors = gradientColors),
+                    shape = RoundedCornerShape(cornerRadius)
+                )*/
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Text(text = text)
+            Text(
+                text = nameButton, fontSize = 20.sp, color = Color.White
+            )
         }
     }
 }
@@ -171,8 +195,7 @@ fun ProfileCard() {
                                 bottom = 10.dp,
                                 start = 10.dp,
                                 end = 10.dp,
-                            ),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                            ), horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
                             text = "Angel Sara",

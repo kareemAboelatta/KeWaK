@@ -55,8 +55,6 @@ fun GradientProgressbar(
         mutableStateOf(100.0F)
     }
 
-
-
     val scope  = rememberCoroutineScope()
 
     val animateNumber = animateFloatAsState(
