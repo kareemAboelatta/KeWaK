@@ -47,6 +47,8 @@ private fun getNames() = List(51) { i -> "Kareem # $i" }
 
 
 
+//fix some thing
+
 
 @Composable
 fun TextShapes() {
