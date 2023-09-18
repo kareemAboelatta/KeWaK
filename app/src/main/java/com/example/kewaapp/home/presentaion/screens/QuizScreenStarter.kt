@@ -41,6 +41,8 @@ import com.example.kewaapp.common.ui.theme.KewaAppTheme
 
 
 
+
+//merged and fix bugs with git
 @Preview(
     uiMode = UI_MODE_NIGHT_YES
 )
