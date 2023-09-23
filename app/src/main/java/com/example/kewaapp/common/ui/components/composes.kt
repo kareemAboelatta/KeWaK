@@ -49,8 +49,6 @@ fun GradientProgressbar(
     backgroundIndicatorColor: Color = Color.LightGray.copy(alpha = 0.3f),
     gradientColors: List<Color> = listOf(
         MaterialTheme.colorScheme.primary,
-        MaterialTheme.colorScheme.onTertiary,
-        MaterialTheme.colorScheme.error,
         MaterialTheme.colorScheme.secondary,
         MaterialTheme.colorScheme.tertiary,
     ),
