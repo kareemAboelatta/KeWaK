@@ -44,11 +44,13 @@ fun GradientProgressbarPreview() {
 @Composable
 fun GradientProgressbar(
     modifier: Modifier = Modifier,
-    percentage: Float = 90F,
+    percentage: Float = 100F,
     indicatorHeight: Dp = 40.dp,
     backgroundIndicatorColor: Color = Color.LightGray.copy(alpha = 0.3f),
     gradientColors: List<Color> = listOf(
         MaterialTheme.colorScheme.primary,
+        MaterialTheme.colorScheme.onTertiary,
+        MaterialTheme.colorScheme.error,
         MaterialTheme.colorScheme.secondary,
         MaterialTheme.colorScheme.tertiary,
     ),
@@ -66,7 +68,7 @@ fun GradientProgressbar(
     )
 
     Box(
-        Modifier
+        modifier
             .fillMaxWidth()
             .border(
                 border = BorderStroke(

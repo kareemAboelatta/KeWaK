@@ -1,6 +1,10 @@
 package com.example.kewaapp.home.presentaion.screens
 
 import android.content.res.Configuration
+import android.widget.Gallery
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,17 +31,25 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.kewaapp.R
 import com.example.kewaapp.common.ui.common.Dimensions.BigIconSize
 import com.example.kewaapp.common.ui.common.PaddingDimensions
@@ -46,7 +58,7 @@ import com.example.kewaapp.common.ui.theme.KewaAppTheme
 import kotlin.math.absoluteValue
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
@@ -92,11 +104,17 @@ fun QuizScreen() {
                 verticalArrangement = Arrangement.spacedBy(PaddingDimensions.small)
             ) {
 
+                val pagerState = rememberPagerState {
+                    images.size
+                }
+
+
                 GradientProgressbar(
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier.padding(10.dp),
+                    percentage = (((pagerState.currentPage+1).toFloat() / images.size ) * 100F)
                 )
 
-                DribbbleInspirationPager()
+                GalleryPager(pagerState)
 
             }
         }
@@ -201,6 +219,9 @@ val images = listOf(
     R.drawable.math,
     R.drawable.english,
     R.drawable.computer,
+    R.drawable.geography,
+    R.drawable.history,
+
 )
 
 // extension method for current page offset
@@ -238,10 +259,9 @@ fun DribbbleInspirationPager() {
                 // Contains Image and Text composables
                 SongInformationCard(
                     modifier = Modifier
-                        .padding(32.dp)
                         .align(Alignment.Center),
                     pagerState = pagerState,
-                    page = page
+                    page = page,
                 )
             }
 
@@ -260,13 +280,14 @@ fun SongInformationCard(
     Card(
         modifier = modifier
     ) {
-        Column(modifier = Modifier) {
+        Column(modifier = modifier) {
             val pageOffset = pagerState.calculateCurrentOffsetForPage(page)
             Image(
                 painter = painterResource(id = images[page]),
                 contentDescription = "",
 
                 modifier = modifier
+                    .fillMaxSize()
                     /* other modifiers */
                     .graphicsLayer {
                         // get a scale value between 1 and 1.75f, 1.75 will be when its resting,
@@ -282,6 +303,58 @@ fun SongInformationCard(
         }
     }
 }
+
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun GalleryPager( pagerState: PagerState) {
+
+
+    val matrix = remember {
+        ColorMatrix()
+    }
+
+
+
+    HorizontalPager(state = pagerState) { index ->
+        val pageOffset = (pagerState.currentPage - index) + pagerState.currentPageOffsetFraction
+
+        val imageSize by animateFloatAsState(
+            targetValue = if (pageOffset != 0.0F) 0.75f else 1f, label = "",
+            animationSpec = tween(durationMillis = 300)
+        )
+
+
+        LaunchedEffect(key1 = imageSize,){
+
+
+        }
+        val saturation = animateFloatAsState(
+            targetValue = if (pageOffset != 0.0F) 0.2F else 1F, label = ""
+        )
+        matrix.setToSaturation(saturation.value)
+
+        AsyncImage(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .graphicsLayer {
+                    scaleX = imageSize
+                    scaleY = imageSize
+                }
+                .animateContentSize()
+                .clip(RoundedCornerShape(16.dp)),
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(images[index])
+                .build(),
+            contentDescription = "",
+            contentScale = ContentScale.Crop,
+            colorFilter = ColorFilter.colorMatrix(matrix)
+        )
+    }
+}
+
 
 
 
