@@ -3,8 +3,8 @@ package com.example.kewaapp.home.presentaion.screens
 import android.content.res.Configuration
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,10 +12,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,40 +27,19 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.kewaapp.R
 import com.example.kewaapp.common.ui.common.Dimensions.BigIconSize
 import com.example.kewaapp.common.ui.common.PaddingDimensions
-import com.example.kewaapp.common.ui.components.GradientButton
-
 import com.example.kewaapp.common.ui.components.GradientProgressbar
-import com.example.kewaapp.common.ui.components.GradientProgressbarPreview
 import com.example.kewaapp.common.ui.theme.KewaAppTheme
-import com.example.kewaapp.home.data.Quiz
 import kotlin.math.absoluteValue
-
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PageSize
-import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Button
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.BaselineShift
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.util.lerp
-import com.example.kewaapp.R
-import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -74,10 +54,10 @@ fun QuizScreen() {
             topBar = {
                 TopAppBar(
                     title = {
-                        Row (
+                        Row(
                             Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center
-                        ){
+                        ) {
                             Text(
                                 text = "Quiz",
                                 style = MaterialTheme.typography.titleLarge,
@@ -121,6 +101,7 @@ fun QuizScreen() {
 }
 
 
+/*
 @OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
@@ -175,6 +156,61 @@ fun QuizPager() {
         }
     }
 }
+*/
+
+@OptIn(ExperimentalFoundationApi::class)
+@Preview
+@Composable
+fun QuizPager(modifier: Modifier = Modifier) {
+    val pagerState = rememberPagerState(pageCount = { images.size })
+    HorizontalPager(
+        modifier = modifier.fillMaxSize(),
+        state = pagerState
+    ) { page ->
+        Box(Modifier
+            .graphicsLayer {
+                val pageOffset = pagerState.calculateCurrentOffsetForPage(page)
+                // translate the contents by the size of the page, to prevent the pages from sliding in from left or right and stays in the center
+                translationX = pageOffset * size.width
+                // apply an alpha to fade the current page in and the old page out
+                alpha = 1 - pageOffset.absoluteValue
+            }
+            .fillMaxSize()) {
+            Image(
+                painter = painterResource(id = images[page]),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+                    .clip(RoundedCornerShape(16.dp)),
+            )
+        }
+    }
+
+}
+
+
+val images = listOf(
+    R.drawable.image,
+    R.drawable.art,
+    R.drawable.math,
+    R.drawable.english,
+    R.drawable.computer,
+)
+// extension method for current page offset
+@OptIn(ExperimentalFoundationApi::class)
+fun PagerState.calculateCurrentOffsetForPage(page: Int): Float {
+    return (currentPage - page) + currentPageOffsetFraction
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+fun Modifier.pagerFadeTransition(page: Int, pagerState: PagerState) =
+    graphicsLayer {
+        val pageOffset = pagerState.calculateCurrentOffsetForPage(page)
+        translationX = pageOffset * size.width
+        alpha = 1- pageOffset.absoluteValue
+    }
 
 
 
