@@ -3,6 +3,7 @@ package com.example.kewaapp.home.presentaion.screens
 import android.content.res.Configuration
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,12 +30,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.lerp
 import com.example.kewaapp.R
 import com.example.kewaapp.common.ui.common.Dimensions.BigIconSize
 import com.example.kewaapp.common.ui.common.PaddingDimensions
@@ -92,7 +96,7 @@ fun QuizScreen() {
                     modifier = Modifier.padding(10.dp)
                 )
 
-                QuizPager()
+                DribbbleInspirationPager()
 
             }
         }
@@ -198,6 +202,7 @@ val images = listOf(
     R.drawable.english,
     R.drawable.computer,
 )
+
 // extension method for current page offset
 @OptIn(ExperimentalFoundationApi::class)
 fun PagerState.calculateCurrentOffsetForPage(page: Int): Float {
@@ -209,17 +214,74 @@ fun Modifier.pagerFadeTransition(page: Int, pagerState: PagerState) =
     graphicsLayer {
         val pageOffset = pagerState.calculateCurrentOffsetForPage(page)
         translationX = pageOffset * size.width
-        alpha = 1- pageOffset.absoluteValue
+        alpha = 1 - pageOffset.absoluteValue
     }
 
 
+@Preview
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun DribbbleInspirationPager() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFECECEC))
+    ) {
+        val pagerState = rememberPagerState(pageCount = { images.size })
+        HorizontalPager(
+            pageSpacing = 16.dp,
+            beyondBoundsPageCount = 2,
+            state = pagerState,
+            modifier = Modifier.fillMaxSize()
+        ) { page ->
+            Box(modifier = Modifier.fillMaxSize()) {
+                // Contains Image and Text composables
+                SongInformationCard(
+                    modifier = Modifier
+                        .padding(32.dp)
+                        .align(Alignment.Center),
+                    pagerState = pagerState,
+                    page = page
+                )
+            }
+
+        }
+    }
+}
 
 
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun SongInformationCard(
+    pagerState: PagerState,
+    page: Int,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier
+    ) {
+        Column(modifier = Modifier) {
+            val pageOffset = pagerState.calculateCurrentOffsetForPage(page)
+            Image(
+                painter = painterResource(id = images[page]),
+                contentDescription = "",
 
+                modifier = Modifier
+                    /* other modifiers */
+                    .graphicsLayer {
+                        // get a scale value between 1 and 1.75f, 1.75 will be when its resting,
+                        // 1f is the smallest it'll be when not the focused page
+                        val scale = lerp(1f, 1.75f, pageOffset)
+                        // apply the scale equally to both X and Y, to not distort the image
+                        scaleX = scale
+                        scaleY = scale
+                    },
+                //..
+            )
 
-
-
-
+        }
+    }
+}
 
 
 
