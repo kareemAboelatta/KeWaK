@@ -37,6 +37,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -177,7 +178,6 @@ fun QuizCard(
         ),
         0
     ),
-    isSelected: Boolean = false,
     isLast : Boolean = false
 ) {
     Card(
@@ -198,16 +198,14 @@ fun QuizCard(
 
                 )
 
-                var selectedAnswer by remember {
-                    mutableIntStateOf(-1)
-                }
+
 
                 Spacer(Modifier.height(10.dp))
 
                 repeat(question.answers.size) { index ->
                     Row(
                         modifier=Modifier.clickable {
-                            selectedAnswer = index
+                            question.selectedAnswer = index
                         },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -220,7 +218,7 @@ fun QuizCard(
                                 .padding(PaddingDimensions.small),
                             border = BorderStroke(
                                 width = 2.dp,
-                                color = if (selectedAnswer == index) MaterialTheme.colorScheme.primary
+                                color = if (question.selectedAnswer == index) MaterialTheme.colorScheme.primary
                                 else MaterialTheme.colorScheme.onPrimary
                             )
                         ) {
@@ -254,8 +252,9 @@ data class Question(
     val question: String,
     val answers: List<String>,
     val numberOfCorrectAnswer: Int,
-    var selectedAnswer :Int = -1
-)
+){
+    var selectedAnswer by mutableIntStateOf(-1)
+}
 
 fun getQuestions(): List<Question> {
     return listOf(
