@@ -1,19 +1,21 @@
 package com.example.kewaapp.home.presentaion.screens
 
-import android.content.res.Configuration
-import android.widget.Gallery
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
@@ -22,8 +24,10 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,25 +35,20 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.lerp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.example.kewaapp.R
 import com.example.kewaapp.common.ui.common.Dimensions.BigIconSize
 import com.example.kewaapp.common.ui.common.PaddingDimensions
@@ -59,9 +58,9 @@ import kotlin.math.absoluteValue
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
-@Preview(
+/*@Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES
-)
+)*/
 @Composable
 fun QuizScreen() {
     KewaAppTheme {
@@ -105,16 +104,16 @@ fun QuizScreen() {
             ) {
 
                 val pagerState = rememberPagerState {
-                    images.size
+                    getQuestions().size
                 }
 
 
                 GradientProgressbar(
                     modifier = Modifier.padding(10.dp),
-                    percentage = (((pagerState.currentPage+1).toFloat() / images.size ) * 100F)
+                    percentage = (((pagerState.currentPage + 1).toFloat() / getQuestions().size) * 100F)
                 )
 
-                GalleryPager(pagerState)
+                QuizPager(pagerState)
 
             }
         }
@@ -180,49 +179,6 @@ fun QuizPager() {
 }
 */
 
-@OptIn(ExperimentalFoundationApi::class)
-@Preview
-@Composable
-fun QuizPager(modifier: Modifier = Modifier) {
-    val pagerState = rememberPagerState(pageCount = { images.size })
-    HorizontalPager(
-        modifier = modifier.fillMaxSize(),
-        state = pagerState
-    ) { page ->
-        Box(Modifier
-            .graphicsLayer {
-                val pageOffset = pagerState.calculateCurrentOffsetForPage(page)
-                // translate the contents by the size of the page, to prevent the pages from sliding in from left or right and stays in the center
-                translationX = pageOffset * size.width
-                // apply an alpha to fade the current page in and the old page out
-                alpha = 1 - pageOffset.absoluteValue
-            }
-            .fillMaxSize()) {
-            Image(
-                painter = painterResource(id = images[page]),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-                    .clip(RoundedCornerShape(16.dp)),
-            )
-        }
-    }
-
-}
-
-
-val images = listOf(
-    R.drawable.image,
-    R.drawable.art,
-    R.drawable.math,
-    R.drawable.english,
-    R.drawable.computer,
-    R.drawable.geography,
-    R.drawable.history,
-
-)
 
 // extension method for current page offset
 @OptIn(ExperimentalFoundationApi::class)
@@ -230,46 +186,8 @@ fun PagerState.calculateCurrentOffsetForPage(page: Int): Float {
     return (currentPage - page) + currentPageOffsetFraction
 }
 
-@OptIn(ExperimentalFoundationApi::class)
-fun Modifier.pagerFadeTransition(page: Int, pagerState: PagerState) =
-    graphicsLayer {
-        val pageOffset = pagerState.calculateCurrentOffsetForPage(page)
-        translationX = pageOffset * size.width
-        alpha = 1 - pageOffset.absoluteValue
-    }
 
-
-@Preview
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun DribbbleInspirationPager() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFECECEC))
-    ) {
-        val pagerState = rememberPagerState(pageCount = { images.size })
-        HorizontalPager(
-            pageSpacing = 16.dp,
-            beyondBoundsPageCount = 2,
-            state = pagerState,
-            modifier = Modifier.fillMaxSize()
-        ) { page ->
-            Box(modifier = Modifier.fillMaxSize()) {
-                // Contains Image and Text composables
-                SongInformationCard(
-                    modifier = Modifier
-                        .align(Alignment.Center),
-                    pagerState = pagerState,
-                    page = page,
-                )
-            }
-
-        }
-    }
-}
-
-
+/*
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SongInformationCard(
@@ -288,7 +206,9 @@ fun SongInformationCard(
 
                 modifier = modifier
                     .fillMaxSize()
-                    /* other modifiers */
+                    */
+/* other modifiers *//*
+
                     .graphicsLayer {
                         // get a scale value between 1 and 1.75f, 1.75 will be when its resting,
                         // 1f is the smallest it'll be when not the focused page
@@ -304,16 +224,11 @@ fun SongInformationCard(
     }
 }
 
+*/
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun GalleryPager( pagerState: PagerState) {
-
-
-    val matrix = remember {
-        ColorMatrix()
-    }
-
+fun QuizPager(pagerState: PagerState) {
 
 
     HorizontalPager(state = pagerState) { index ->
@@ -325,16 +240,8 @@ fun GalleryPager( pagerState: PagerState) {
         )
 
 
-        LaunchedEffect(key1 = imageSize,){
 
-
-        }
-        val saturation = animateFloatAsState(
-            targetValue = if (pageOffset != 0.0F) 0.2F else 1F, label = ""
-        )
-        matrix.setToSaturation(saturation.value)
-
-        AsyncImage(
+        QuizCard(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
@@ -345,15 +252,222 @@ fun GalleryPager( pagerState: PagerState) {
                 }
                 .animateContentSize()
                 .clip(RoundedCornerShape(16.dp)),
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(images[index])
-                .build(),
-            contentDescription = "",
-            contentScale = ContentScale.Crop,
-            colorFilter = ColorFilter.colorMatrix(matrix)
+            question = getQuestions()[index],
+            isLast = (index == getQuestions().size-1)
         )
     }
 }
+
+
+@Preview(
+    uiMode = UI_MODE_NIGHT_YES
+)
+@Composable
+fun QuizCardPrev() {
+    KewaAppTheme {
+        QuizCard()
+    }
+}
+
+@Composable
+fun QuizCard(
+    modifier: Modifier = Modifier,
+    question: Question = Question(
+        "q1",
+        "What does API stand for in Android development?",
+        listOf(
+            "Application Programming Interface",
+            "Android Programming Interface",
+            "Application Program Interface",
+            "Android Program Interface"
+        ),
+        0
+    ),
+    isSelected: Boolean = false,
+    isLast : Boolean = false
+) {
+    Card(
+        modifier = modifier
+    ) {
+        Box (
+            contentAlignment= Alignment.BottomEnd
+        ){
+            Column(
+                modifier = modifier.then(
+                    Modifier.padding(10.dp)
+                ),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    text = question.question,
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+
+                )
+
+                var selectedAnswer by remember {
+                    mutableIntStateOf(-1)
+                }
+
+                Spacer(Modifier.height(10.dp))
+
+                repeat(question.answers.size) { index ->
+                    Row(
+                        modifier=Modifier.clickable {
+                            selectedAnswer = index
+                        },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "$index.",
+                        )
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(PaddingDimensions.small),
+                            border = BorderStroke(
+                                width = 2.dp,
+                                color = if (selectedAnswer == index) MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.onPrimary
+                            )
+                        ) {
+                            Text(
+                                modifier = Modifier.padding(PaddingDimensions.medium),
+                                text = question.answers[index],
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    }
+                }
+
+
+            }
+
+            if (isLast)
+                FloatingActionButton(
+                    modifier= Modifier.padding(PaddingDimensions.xLarge),
+                    onClick = { /*TODO*/ }
+                ) {
+                    Icon(imageVector = Icons.Filled.Done, contentDescription ="Submit" )
+                }
+
+        }
+    }
+}
+
+
+data class Question(
+    val questionId: String,
+    val question: String,
+    val answers: List<String>,
+    val numberOfCorrectAnswer: Int,
+)
+
+fun getQuestions(): List<Question> {
+    return listOf(
+        Question(
+            "q1",
+            "What does API stand for in Android development?",
+            listOf(
+                "Application Programming Interface",
+                "Android Programming Interface",
+                "Application Program Interface",
+                "Android Program Interface"
+            ),
+            0
+        ),
+        Question(
+            "q2",
+            "Which layout is used to align the children of a RelativeLayout relative to each other?",
+            listOf("LinearLayout", "FrameLayout", "GridLayout", "ConstraintLayout"),
+            3
+        ),
+        Question(
+            "q3",
+            "What is the purpose of the 'adb' tool in Android development?",
+            listOf(
+                "Android Debug Bridge",
+                "Application Development Bridge",
+                "Android Development Builder",
+                "Application Debugging Bridge"
+            ),
+            0
+        ),
+        Question(
+            "q4",
+            "In Android, what is an Intent used for?",
+            listOf(
+                "To display an activity",
+                "To perform an action",
+                "To declare permissions",
+                "To define layouts"
+            ),
+            1
+        ),
+        Question(
+            "q5",
+            "What is the purpose of the 'AndroidManifest.xml' file?",
+            listOf(
+                "Define the app's layout",
+                "Specify app permissions",
+                "Declare activities",
+                "Handle user input"
+            ),
+            2
+        ),
+        Question(
+            "q6",
+            "Which component is responsible for managing the app's lifecycle in Android?",
+            listOf("Activity", "Fragment", "Service", "Application"),
+            3
+        ),
+        Question(
+            "q7",
+            "What is the minimum Android API level required for using Jetpack Compose?",
+            listOf("API level 21", "API level 19", "API level 14", "API level 26"),
+            0
+        ),
+        Question(
+            "q8",
+            "In Android, what is the purpose of the 'ViewModel' class?",
+            listOf(
+                "Handle UI-related data",
+                "Perform network operations",
+                "Define app layouts",
+                "Handle user input"
+            ),
+            0
+        ),
+        Question(
+            "q9",
+            "Which Gradle file is used to configure dependencies in an Android project?",
+            listOf(
+                "build.gradle (Project)",
+                "build.gradle (Module)",
+                "settings.gradle",
+                "gradle.properties"
+            ),
+            1
+        ),
+        Question(
+            "q10",
+            "What is the purpose of the 'R' class in Android?",
+            listOf(
+                "Handle resources",
+                "Define layouts",
+                "Manage permissions",
+                "Run background tasks"
+            ),
+            0
+        )
+    )
+}
+
+
+
+
+
+
+
 
 
 
