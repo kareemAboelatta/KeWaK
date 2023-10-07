@@ -121,111 +121,6 @@ fun QuizScreen() {
 
 }
 
-
-/*
-@OptIn(ExperimentalFoundationApi::class)
-@Preview
-@Composable
-fun QuizPager() {
-    val pagerState = rememberPagerState(pageCount = {
-        10
-    })
-    HorizontalPager(
-        modifier = Modifier
-            .fillMaxSize()
-
-        ,
-
-        state = pagerState,
-        pageSpacing = 5.dp,
-        pageSize = object : PageSize {
-            override fun Density.calculateMainAxisPageSize(
-                availableSpace: Int,
-                pageSpacing: Int
-            ): Int {
-                return ((availableSpace - 1.5 * pageSpacing) * 0.5f).toInt()
-            }
-        },
-
-    ) { page ->
-        Card(
-            Modifier
-                .size(300.dp)
-                .graphicsLayer {
-                    // Calculate the absolute offset for the current page from the
-                    // scroll position. We use the absolute value which allows us to mirror
-                    // any effects for both directions
-                    val pageOffset = (
-                            (pagerState.currentPage - page) + pagerState
-                                .currentPageOffsetFraction
-                            ).absoluteValue
-
-                    // We animate the alpha, between 50% and 100%
-                    alpha = lerp(
-                        start = 0.5f,
-                        stop = 1f,
-                        fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                    )
-                }
-        ) {
-            // Card content
-            Image(
-                modifier = Modifier.fillMaxSize(),
-                painter = painterResource(id = R.drawable.art),
-                contentDescription = null
-            )
-        }
-    }
-}
-*/
-
-
-// extension method for current page offset
-@OptIn(ExperimentalFoundationApi::class)
-fun PagerState.calculateCurrentOffsetForPage(page: Int): Float {
-    return (currentPage - page) + currentPageOffsetFraction
-}
-
-
-/*
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun SongInformationCard(
-    pagerState: PagerState,
-    page: Int,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier
-    ) {
-        Column(modifier = modifier) {
-            val pageOffset = pagerState.calculateCurrentOffsetForPage(page)
-            Image(
-                painter = painterResource(id = images[page]),
-                contentDescription = "",
-
-                modifier = modifier
-                    .fillMaxSize()
-                    */
-/* other modifiers *//*
-
-                    .graphicsLayer {
-                        // get a scale value between 1 and 1.75f, 1.75 will be when its resting,
-                        // 1f is the smallest it'll be when not the focused page
-                        val scale = lerp(1f, 2f, pageOffset)
-                        // apply the scale equally to both X and Y, to not distort the image
-                        scaleX = scale
-                        scaleY = scale
-                    },
-                //..
-            )
-
-        }
-    }
-}
-
-*/
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun QuizPager(pagerState: PagerState) {
@@ -235,10 +130,9 @@ fun QuizPager(pagerState: PagerState) {
         val pageOffset = (pagerState.currentPage - index) + pagerState.currentPageOffsetFraction
 
         val imageSize by animateFloatAsState(
-            targetValue = if (pageOffset != 0.0F) 0.75f else 1f, label = "",
-            animationSpec = tween(durationMillis = 300)
+            targetValue = if (pageOffset != 0.0F) 0.9f else 1f, label = "",
+            animationSpec = tween(durationMillis = 200)
         )
-
 
 
         QuizCard(
@@ -360,6 +254,7 @@ data class Question(
     val question: String,
     val answers: List<String>,
     val numberOfCorrectAnswer: Int,
+    var selectedAnswer :Int = -1
 )
 
 fun getQuestions(): List<Question> {
