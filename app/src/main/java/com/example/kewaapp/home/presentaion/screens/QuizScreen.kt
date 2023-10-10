@@ -144,9 +144,22 @@ fun QuizPager(
         val pageOffset = (pagerState.currentPage - index) + pagerState.currentPageOffsetFraction
 
         val imageSize by animateFloatAsState(
-            targetValue = if (pageOffset != 0.0F) 0.9f else 1f, label = "",
+            targetValue = if ( pageOffset.absoluteValue > 0.2F) 0.9f else 1f, label = "",
             animationSpec = tween(durationMillis = 200)
         )
+
+
+        val testImageSize by animateFloatAsState(
+            targetValue =  1 - pageOffset.absoluteValue , label = "",
+            animationSpec = tween(durationMillis = 200)
+        )
+
+
+
+
+
+
+
 
 
         QuizCard(
@@ -155,8 +168,8 @@ fun QuizPager(
                 .padding(16.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .graphicsLayer {
-                    scaleX = imageSize
-                    scaleY = imageSize
+                    scaleX = testImageSize
+                    scaleY = testImageSize
                 }
                 .animateContentSize()
                 .clip(RoundedCornerShape(16.dp)),
@@ -165,6 +178,13 @@ fun QuizPager(
         )
     }
 }
+
+
+fun Int.climp(min:Float){
+
+}
+
+
 
 
 @Preview(
