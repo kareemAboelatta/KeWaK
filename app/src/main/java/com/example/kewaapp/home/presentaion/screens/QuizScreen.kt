@@ -11,11 +11,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
@@ -25,6 +27,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -36,29 +39,24 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.listSaver
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.lerp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.kewaapp.R
-import com.example.kewaapp.auth.presentation.screens.auth.LoginDataState
 import com.example.kewaapp.common.ui.common.Dimensions.BigIconSize
 import com.example.kewaapp.common.ui.common.PaddingDimensions
 import com.example.kewaapp.common.ui.components.GradientProgressbar
 import com.example.kewaapp.common.ui.theme.KewaAppTheme
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
 
@@ -115,13 +113,24 @@ fun QuizScreen(
                         .size
                 }
 
-
                 GradientProgressbar(
                     modifier = Modifier.padding(10.dp),
                     percentage = (((pagerState.currentPage + 1).toFloat() / getQuestions().size) * 100F)
                 )
 
-                QuizPager(pagerState)
+                QuizPager(
+                    modifier = Modifier.weight(1F),
+                    pagerState
+                )
+
+                val coroutineScope = rememberCoroutineScope()
+                Button(onClick = {
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                    }
+                }) {
+                    Text(text = "Next")
+                }
 
             }
         }
@@ -132,59 +141,69 @@ fun QuizScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun QuizPager(
+    modifier: Modifier = Modifier,
     pagerState: PagerState,
     viewModel: QuizViewModel = viewModel()
 
 ) {
 
 
+    HorizontalPager(
+        modifier = modifier,
+        state = pagerState,
+        contentPadding = PaddingValues(horizontal = 50.dp),
 
-
-    HorizontalPager(state = pagerState) { index ->
+        verticalAlignment = Alignment.CenterVertically,
+    ) { index ->
         val pageOffset = (pagerState.currentPage - index) + pagerState.currentPageOffsetFraction
 
         val imageSize by animateFloatAsState(
-            targetValue = if ( pageOffset.absoluteValue > 0.2F) 0.9f else 1f, label = "",
+            targetValue = if (pageOffset.absoluteValue > 0.2F) 0.9f else 1f, label = "",
             animationSpec = tween(durationMillis = 200)
         )
 
 
-        val testImageSize by animateFloatAsState(
-            targetValue =  1 - pageOffset.absoluteValue , label = "",
-            animationSpec = tween(durationMillis = 200)
+        /*
+                val testImageSize by animateFloatAsState(
+                    targetValue =  1 - pageOffset.absoluteValue.coerceIn() , label = "",
+                    animationSpec = tween(durationMillis = 200)
+                )
+        */
+
+
+        val scale = lerp(
+            start = 0.8f,
+            stop = 1f,
+            fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f)
         )
-
-
-
-
-
-
 
 
 
         QuizCard(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .graphicsLayer {
-                    scaleX = testImageSize
-                    scaleY = testImageSize
+                .offset{
+                    IntOffset(
+                        x =(70.dp * pageOffset).roundToPx() ,
+                        y = 0,
+                    )
                 }
-                .animateContentSize()
-                .clip(RoundedCornerShape(16.dp)),
+                .padding(15.dp)
+
+                .clip(RoundedCornerShape(16.dp))
+                .scale(scale, scale)
+                .clip(RoundedCornerShape(16.dp)
+                ),
+
             question = getQuestions()[index],
-            isLast = (index == getQuestions().size-1)
+            isLast = (index == getQuestions().size - 1)
         )
     }
 }
 
 
-fun Int.climp(min:Float){
+fun Int.climp(min: Float) {
 
 }
-
-
 
 
 @Preview(
@@ -211,14 +230,14 @@ fun QuizCard(
         ),
         0
     ),
-    isLast : Boolean = false
+    isLast: Boolean = false
 ) {
     Card(
         modifier = modifier
     ) {
-        Box (
-            contentAlignment= Alignment.BottomEnd
-        ){
+        Box(
+            contentAlignment = Alignment.BottomEnd
+        ) {
             Column(
                 modifier = modifier.then(
                     Modifier.padding(10.dp)
@@ -237,7 +256,7 @@ fun QuizCard(
 
                 repeat(question.answers.size) { index ->
                     Row(
-                        modifier=Modifier.clickable {
+                        modifier = Modifier.clickable {
                             question.selectedAnswer = index
                         },
                         verticalAlignment = Alignment.CenterVertically
@@ -269,10 +288,10 @@ fun QuizCard(
 
             if (isLast)
                 FloatingActionButton(
-                    modifier= Modifier.padding(PaddingDimensions.xLarge),
+                    modifier = Modifier.padding(PaddingDimensions.xLarge),
                     onClick = { /*TODO*/ }
                 ) {
-                    Icon(imageVector = Icons.Filled.Done, contentDescription ="Submit" )
+                    Icon(imageVector = Icons.Filled.Done, contentDescription = "Submit")
                 }
 
         }
