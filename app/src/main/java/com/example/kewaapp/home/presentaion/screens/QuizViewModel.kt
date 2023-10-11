@@ -17,6 +17,9 @@ class QuizViewModel @Inject constructor() : ViewModel() {
     var questionsState: State<List<Question>> = _questionsState
 
 
+    var valid = mutableStateOf(true)
+
+
     init {
         _questionsState.value = getQuestions()
     }
@@ -28,6 +31,12 @@ class QuizViewModel @Inject constructor() : ViewModel() {
                 question.selectedAnswer = answer
             }
         }
+    }
+
+    fun isAllQuestionsAnswered():Boolean{
+       return _questionsState.value.any {
+           it.selectedAnswer ==-1
+       }.not()
     }
 
 
