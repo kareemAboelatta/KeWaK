@@ -14,20 +14,17 @@ import javax.inject.Inject
 class QuizViewModel @Inject constructor() : ViewModel() {
 
     private val _questionsState = mutableStateOf<List<Question>>(emptyList())
-    var questionsState: State<List<Question>> =   _questionsState
+    var questionsState: State<List<Question>> = _questionsState
 
 
     init {
-        _questionsState.value =  getQuestions()
+        _questionsState.value = getQuestions()
     }
 
 
-
-
-
-    fun answerQuestion(questionId: String , answer : Int){
-         _questionsState.value.map {question ->
-            if (question.questionId == questionId ){
+    fun answerQuestion(questionId: String, answer: Int) {
+        _questionsState.value.map { question ->
+            if (question.questionId == questionId) {
                 question.selectedAnswer = answer
             }
         }
@@ -43,9 +40,8 @@ data class Question(
     val numberOfCorrectAnswer: Int,
     val initialAnswer: Int = -1,
 
-    ){
+    ) {
     var selectedAnswer by mutableIntStateOf(initialAnswer)
-
 
 
 }
@@ -136,7 +132,7 @@ fun getQuestions(): List<Question> {
             ),
             1
         ),
-        Question  (
+        Question(
             "q10",
             "What is the purpose of the 'R' class in Android?",
             listOf(
@@ -146,7 +142,68 @@ fun getQuestions(): List<Question> {
                 "Run background tasks"
             ),
             0
+        ),        Question(
+            "q11",
+            "What is the purpose of the 'RecyclerView' in Android?",
+            listOf("Display a list of items efficiently", "Manage app permissions", "Handle UI events", "Define app layouts"),
+            0
+        ),
+        Question(
+            "q12",
+            "In Android, what is the role of the 'FragmentManager'?",
+            listOf("Manage fragments and their transactions", "Handle background tasks", "Define animations", "Manage app preferences"),
+            0
+        ),
+        Question(
+            "q13",
+            "Which component is used for background processing in Android?",
+            listOf("Activity", "Service", "BroadcastReceiver", "ContentProvider"),
+            1
+        ),
+        Question(
+            "q14",
+            "What is the purpose of the 'SQLiteOpenHelper' class in Android?",
+            listOf("Manage app permissions", "Handle UI events", "Database creation and version management", "Define app layouts"),
+            2
+        ),
+        Question(
+            "q15",
+            "Which XML file is used for defining the layout of an Android activity?",
+            listOf("styles.xml", "manifest.xml", "layout.xml", "activity_main.xml"),
+            3
+        ),
+        Question(
+            "q16",
+            "What is the purpose of the 'Handler' class in Android?",
+            listOf("Manage app permissions", "Handle UI events", "Manage threads and runnables", "Define app layouts"),
+            2
+        ),
+        Question(
+            "q17",
+            "In Android, what does the term 'ANR' stand for?",
+            listOf("Application Not Responding", "Android Notification Receiver", "Activity Navigation Resolver", "App Network Request"),
+            0
+        ),
+        Question(
+            "q18",
+            "Which layout is best suited for evenly distributing child views in a row or column?",
+            listOf("LinearLayout", "RelativeLayout", "GridLayout", "ConstraintLayout"),
+            0
+        ),
+        Question(
+            "q19",
+            "What is the purpose of the 'SharedPreferences' in Android?",
+            listOf("Manage app permissions", "Store and retrieve key-value pairs", "Handle UI events", "Define app layouts"),
+            1
+        ),
+        Question(
+            "q20",
+            "In Android, what is the purpose of the 'IntentFilter'?",
+            listOf("Define the app's layout", "Specify which components can respond to an intent", "Declare app permissions", "Handle user input"),
+            1
         )
+
+
     )
 }
 

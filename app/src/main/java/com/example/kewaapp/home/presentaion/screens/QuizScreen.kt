@@ -1,12 +1,8 @@
 package com.example.kewaapp.home.presentaion.screens
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,17 +13,18 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -38,16 +35,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -55,7 +49,6 @@ import com.example.kewaapp.common.ui.common.Dimensions.BigIconSize
 import com.example.kewaapp.common.ui.common.PaddingDimensions
 import com.example.kewaapp.common.ui.components.GradientProgressbar
 import com.example.kewaapp.common.ui.theme.KewaAppTheme
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
@@ -109,8 +102,7 @@ fun QuizScreen(
             ) {
 
                 val pagerState = rememberPagerState {
-                    viewModel.questionsState.value
-                        .size
+                    viewModel.questionsState.value.size
                 }
 
                 GradientProgressbar(
@@ -120,16 +112,47 @@ fun QuizScreen(
 
                 QuizPager(
                     modifier = Modifier.weight(1F),
-                    pagerState
+                    pagerState,
+                    list = viewModel.questionsState.value
                 )
 
                 val coroutineScope = rememberCoroutineScope()
-                Button(onClick = {
-                    coroutineScope.launch {
-                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
-                    }
-                }) {
-                    Text(text = "Next")
+
+                Row(
+                    horizontalArrangement = Arrangement.SpaceAround
+                ) {
+                    if (pagerState.canScrollBackward)
+                        IconButton(
+                            modifier = Modifier.size(BigIconSize),
+                            onClick = {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                                }
+                            }) {
+                            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
+                        }
+                    else
+                        Box(modifier = Modifier.size(BigIconSize))
+
+
+
+                    if (pagerState.canScrollForward)
+                        IconButton(
+                            modifier = Modifier.size(BigIconSize),
+                            onClick = {
+
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                            }
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.ArrowForward,
+                                contentDescription = "Next"
+                            )
+                        }
+                    else
+                        Box(modifier = Modifier.size(BigIconSize))
+
                 }
 
             }
@@ -143,7 +166,7 @@ fun QuizScreen(
 fun QuizPager(
     modifier: Modifier = Modifier,
     pagerState: PagerState,
-    viewModel: QuizViewModel = viewModel()
+    list: List<Question>
 
 ) {
 
@@ -157,22 +180,9 @@ fun QuizPager(
     ) { index ->
         val pageOffset = (pagerState.currentPage - index) + pagerState.currentPageOffsetFraction
 
-        val imageSize by animateFloatAsState(
-            targetValue = if (pageOffset.absoluteValue > 0.2F) 0.9f else 1f, label = "",
-            animationSpec = tween(durationMillis = 200)
-        )
-
-
-        /*
-                val testImageSize by animateFloatAsState(
-                    targetValue =  1 - pageOffset.absoluteValue.coerceIn() , label = "",
-                    animationSpec = tween(durationMillis = 200)
-                )
-        */
-
 
         val scale = lerp(
-            start = 0.8f,
+            start = 0.9f,
             stop = 1f,
             fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f)
         )
@@ -181,28 +191,17 @@ fun QuizPager(
 
         QuizCard(
             modifier = Modifier
-                .offset{
-                    IntOffset(
-                        x =(70.dp * pageOffset).roundToPx() ,
-                        y = 0,
-                    )
-                }
-                .padding(15.dp)
-
+                .fillMaxSize()
                 .clip(RoundedCornerShape(16.dp))
                 .scale(scale, scale)
-                .clip(RoundedCornerShape(16.dp)
+                .clip(
+                    RoundedCornerShape(16.dp)
                 ),
 
-            question = getQuestions()[index],
+            question = list[index],
             isLast = (index == getQuestions().size - 1)
         )
     }
-}
-
-
-fun Int.climp(min: Float) {
-
 }
 
 
@@ -230,6 +229,8 @@ fun QuizCard(
         ),
         0
     ),
+    viewModel: QuizViewModel = viewModel(),
+
     isLast: Boolean = false
 ) {
     Card(
@@ -239,25 +240,25 @@ fun QuizCard(
             contentAlignment = Alignment.BottomEnd
         ) {
             Column(
-                modifier = modifier.then(
-                    Modifier.padding(10.dp)
-                ),
-                horizontalAlignment = Alignment.Start
-            ) {
+                modifier = modifier
+                    .then(
+                        Modifier.padding(vertical = 40.dp, horizontal = 10.dp)
+                    )
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.Start,
+
+                ) {
                 Text(
                     text = question.question,
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-
                 )
-
-
 
                 Spacer(Modifier.height(10.dp))
 
                 repeat(question.answers.size) { index ->
                     Row(
                         modifier = Modifier.clickable {
-                            question.selectedAnswer = index
+                            viewModel.answerQuestion(questionId = question.questionId, index)
                         },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
