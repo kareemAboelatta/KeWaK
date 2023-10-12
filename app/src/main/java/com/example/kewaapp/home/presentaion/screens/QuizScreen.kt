@@ -1,6 +1,8 @@
 package com.example.kewaapp.home.presentaion.screens
 
+import android.content.res.Configuration
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -36,12 +38,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.modifier.modifierLocalOf
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,16 +63,16 @@ import kotlin.math.absoluteValue
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
-/*@Preview(
+@Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES
-)*/
+)
 @Composable
 fun QuizScreen(
     viewModel: QuizViewModel = viewModel()
 ) {
+
     KewaAppTheme {
         Scaffold(
-
             topBar = {
                 TopAppBar(
                     title = {
@@ -94,71 +100,98 @@ fun QuizScreen(
                         }
                     })
             },
-            containerColor = MaterialTheme.colorScheme.background
+            containerColor = MaterialTheme.colorScheme.background,
         ) {
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .padding(it),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(PaddingDimensions.small)
-            ) {
-
-                val pagerState = rememberPagerState {
-                    viewModel.questionsState.value.size
-                }
-
-                GradientProgressbar(
-                    modifier = Modifier.padding(10.dp),
-                    percentage = (((pagerState.currentPage + 1).toFloat() / getQuestions().size) * 100F)
-                )
-
-                QuizPager(
-                    modifier = Modifier.weight(1F),
-                    pagerState,
-                    list = viewModel.questionsState.value
-                )
-
-                val coroutineScope = rememberCoroutineScope()
-
-                Row(
-                    horizontalArrangement = Arrangement.SpaceAround
-                ) {
-                    if (pagerState.canScrollBackward)
-                        IconButton(
-                            modifier = Modifier.size(VeryBigIconSize),
-                            onClick = {
-                                coroutineScope.launch {
-                                    pagerState.animateScrollToPage(pagerState.currentPage - 1)
-                                }
-                            }) {
-                            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
-                        }
-                    else
-                        Box(modifier = Modifier.size(VeryBigIconSize))
-
-
-
-                    if (pagerState.canScrollForward)
-                        IconButton(
-                            modifier = Modifier.size(VeryBigIconSize),
-                            onClick = {
-
-                                coroutineScope.launch {
-                                    pagerState.animateScrollToPage(pagerState.currentPage + 1)
-                                }
-                            }) {
-                            Icon(
-                                imageVector = Icons.Filled.ArrowForward,
-                                contentDescription = "Next"
-                            )
-                        }
-                    else
-                        Box(modifier = Modifier.size(VeryBigIconSize))
-
-                }
-
+            val pagerState = rememberPagerState {
+                viewModel.questionsState.value.size
             }
+            val isShowSubmit by remember {
+                derivedStateOf{
+                    pagerState.currentPage ==  viewModel.questionsState.value.size -1
+                }
+            }
+
+            Box(
+                contentAlignment = Alignment.BottomEnd
+            ){
+
+                Column(
+                    Modifier
+                        .fillMaxSize()
+                        .padding(it),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(PaddingDimensions.small)
+                ) {
+
+
+
+                    GradientProgressbar(
+                        modifier = Modifier.padding(10.dp),
+                        percentage = (((pagerState.currentPage + 1).toFloat() / getQuestions().size) * 100F)
+                    )
+
+                    QuizPager(
+                        modifier = Modifier.weight(1F),
+                        pagerState,
+                        list = viewModel.questionsState.value
+                    )
+
+                    val coroutineScope = rememberCoroutineScope()
+
+
+
+
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceAround
+                    ) {
+                        AnimatedVisibility(visible = pagerState.canScrollBackward) {
+                            IconButton(
+                                onClick = {
+                                    coroutineScope.launch {
+                                        pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                                    }
+                                }) {
+                                Icon(
+                                    modifier  =  Modifier.size(VeryBigIconSize),
+                                    imageVector = Icons.Filled.ArrowBack,
+                                    contentDescription = "Back")
+                            }
+                        }
+
+
+
+                        AnimatedVisibility(visible = pagerState.canScrollForward) {
+                            IconButton(
+                                onClick = {
+                                    coroutineScope.launch {
+                                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                                    }
+                                }) {
+                                Icon(
+                                    modifier  =  Modifier.size(VeryBigIconSize),
+                                    imageVector = Icons.Filled.ArrowForward,
+                                    contentDescription = "Next"
+                                )
+                            }
+                        }
+
+                    }
+
+                }
+
+                AnimatedVisibility(visible = isShowSubmit) {
+                    FloatingActionButton(
+                        modifier = Modifier.padding(PaddingDimensions.xLarge),
+                        onClick = {
+
+                        }
+                    ) {
+                        Icon(imageVector = Icons.Filled.Done, contentDescription = "Submit")
+                    }
+                }
+            }
+
+
         }
     }
 
@@ -200,7 +233,6 @@ fun QuizPager(
                 ),
             index = index,
             question = list[index],
-            isLast = (index == getQuestions().size - 1)
         )
     }
 }
@@ -264,9 +296,7 @@ fun QuizCard(
                         text = question.question,
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                     )
-
                     Spacer(Modifier.height(10.dp))
-
                     repeat(question.answers.size) { index ->
                         Row(
                             modifier = Modifier.clickable {
@@ -296,16 +326,6 @@ fun QuizCard(
                         }
                     }
 
-
-                }
-
-                if (isLast) {
-                    FloatingActionButton(
-                        modifier = Modifier.padding(PaddingDimensions.xLarge),
-                        onClick = { /*TODO*/ }
-                    ) {
-                        Icon(imageVector = Icons.Filled.Done, contentDescription = "Submit")
-                    }
                 }
 
 

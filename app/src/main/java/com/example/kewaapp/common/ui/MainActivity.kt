@@ -15,6 +15,7 @@ import com.example.kewaapp.common.domain.entities.User
 import com.example.kewaapp.auth.presentation.screens.auth.AuthScreen
 import com.example.kewaapp.auth.presentation.screens.LandingScreen
 import com.example.kewaapp.common.ui.theme.KewaAppTheme
+import com.example.kewaapp.home.presentaion.screens.QuizResultScreen
 import com.example.kewaapp.home.presentaion.screens.QuizScreen
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -32,7 +33,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             KewaAppTheme {
                 // A surface container using the 'background' color from the theme
-                QuizScreen()
+//                QuizScreen()
+
+                QuizResultScreen()
             }
         }
     }

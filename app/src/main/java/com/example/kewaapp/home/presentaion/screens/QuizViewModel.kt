@@ -33,14 +33,39 @@ class QuizViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun isAllQuestionsAnswered():Boolean{
-       return _questionsState.value.any {
-           it.selectedAnswer ==-1
-       }.not()
+    fun isAllQuestionsAnswered(): Boolean {
+        return _questionsState.value.any {
+            it.selectedAnswer == -1
+        }.not()
     }
 
+    fun getResult(): ResultOfExam {
+        val total = _questionsState.value.size
+        var result = 0
+        var incorrectAnswers = mutableListOf<String>()
+
+        _questionsState.value.forEach {
+            if (it.selectedAnswer == it.numberOfCorrectAnswer)
+                result++
+            else
+                incorrectAnswers.add(it.questionId)
+        }
+
+        return ResultOfExam(
+            total = total,
+            studentResult = result,
+            incorrectAnswers = incorrectAnswers
+        )
+    }
 
 }
+
+
+data class ResultOfExam(
+    val total: Int,
+    val studentResult: Int,
+    val incorrectAnswers: List<String>
+)
 
 data class Question(
     val questionId: String,
@@ -96,6 +121,7 @@ fun getQuestions(): List<Question> {
             ),
             1
         ),
+/*
         Question(
             "q5",
             "What is the purpose of the 'AndroidManifest.xml' file?",
@@ -151,16 +177,26 @@ fun getQuestions(): List<Question> {
                 "Run background tasks"
             ),
             0
-        ),        Question(
+        ), Question(
             "q11",
             "What is the purpose of the 'RecyclerView' in Android?",
-            listOf("Display a list of items efficiently", "Manage app permissions", "Handle UI events", "Define app layouts"),
+            listOf(
+                "Display a list of items efficiently",
+                "Manage app permissions",
+                "Handle UI events",
+                "Define app layouts"
+            ),
             0
         ),
         Question(
             "q12",
             "In Android, what is the role of the 'FragmentManager'?",
-            listOf("Manage fragments and their transactions", "Handle background tasks", "Define animations", "Manage app preferences"),
+            listOf(
+                "Manage fragments and their transactions",
+                "Handle background tasks",
+                "Define animations",
+                "Manage app preferences"
+            ),
             0
         ),
         Question(
@@ -172,7 +208,12 @@ fun getQuestions(): List<Question> {
         Question(
             "q14",
             "What is the purpose of the 'SQLiteOpenHelper' class in Android?",
-            listOf("Manage app permissions", "Handle UI events", "Database creation and version management", "Define app layouts"),
+            listOf(
+                "Manage app permissions",
+                "Handle UI events",
+                "Database creation and version management",
+                "Define app layouts"
+            ),
             2
         ),
         Question(
@@ -184,13 +225,23 @@ fun getQuestions(): List<Question> {
         Question(
             "q16",
             "What is the purpose of the 'Handler' class in Android?",
-            listOf("Manage app permissions", "Handle UI events", "Manage threads and runnables", "Define app layouts"),
+            listOf(
+                "Manage app permissions",
+                "Handle UI events",
+                "Manage threads and runnables",
+                "Define app layouts"
+            ),
             2
         ),
         Question(
             "q17",
             "In Android, what does the term 'ANR' stand for?",
-            listOf("Application Not Responding", "Android Notification Receiver", "Activity Navigation Resolver", "App Network Request"),
+            listOf(
+                "Application Not Responding",
+                "Android Notification Receiver",
+                "Activity Navigation Resolver",
+                "App Network Request"
+            ),
             0
         ),
         Question(
@@ -202,15 +253,26 @@ fun getQuestions(): List<Question> {
         Question(
             "q19",
             "What is the purpose of the 'SharedPreferences' in Android?",
-            listOf("Manage app permissions", "Store and retrieve key-value pairs", "Handle UI events", "Define app layouts"),
+            listOf(
+                "Manage app permissions",
+                "Store and retrieve key-value pairs",
+                "Handle UI events",
+                "Define app layouts"
+            ),
             1
         ),
         Question(
             "q20",
             "In Android, what is the purpose of the 'IntentFilter'?",
-            listOf("Define the app's layout", "Specify which components can respond to an intent", "Declare app permissions", "Handle user input"),
+            listOf(
+                "Define the app's layout",
+                "Specify which components can respond to an intent",
+                "Declare app permissions",
+                "Handle user input"
+            ),
             1
         )
+*/
 
 
     )
