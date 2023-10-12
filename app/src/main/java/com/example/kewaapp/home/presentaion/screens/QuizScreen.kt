@@ -3,6 +3,7 @@ package com.example.kewaapp.home.presentaion.screens
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -141,10 +142,10 @@ fun QuizScreen(
                             modifier = Modifier.size(BigIconSize),
                             onClick = {
 
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(pagerState.currentPage + 1)
-                            }
-                        }) {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                                }
+                            }) {
                             Icon(
                                 imageVector = Icons.Filled.ArrowForward,
                                 contentDescription = "Next"
@@ -175,7 +176,6 @@ fun QuizPager(
         modifier = modifier,
         state = pagerState,
         contentPadding = PaddingValues(horizontal = 50.dp),
-
         verticalAlignment = Alignment.CenterVertically,
     ) { index ->
         val pageOffset = (pagerState.currentPage - index) + pagerState.currentPageOffsetFraction
@@ -191,6 +191,7 @@ fun QuizPager(
 
         QuizCard(
             modifier = Modifier
+                .padding(top = 20.dp)
                 .fillMaxSize()
                 .clip(RoundedCornerShape(16.dp))
                 .scale(scale, scale)
@@ -230,7 +231,7 @@ fun QuizCard(
         0
     ),
     viewModel: QuizViewModel = viewModel(),
-
+    index: Int = 0,
     isLast: Boolean = false
 ) {
     Card(
@@ -239,15 +240,16 @@ fun QuizCard(
         Box(
             contentAlignment = Alignment.BottomEnd
         ) {
+
             Column(
-                modifier = modifier
+                modifier = Modifier.padding(top = 20.dp).then(modifier)
                     .then(
                         Modifier.padding(vertical = 40.dp, horizontal = 10.dp)
                     )
                     .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.Start,
+            ) {
 
-                ) {
                 Text(
                     text = question.question,
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
@@ -287,13 +289,35 @@ fun QuizCard(
 
             }
 
-            if (isLast)
+            if (isLast) {
                 FloatingActionButton(
                     modifier = Modifier.padding(PaddingDimensions.xLarge),
                     onClick = { /*TODO*/ }
                 ) {
                     Icon(imageVector = Icons.Filled.Done, contentDescription = "Submit")
                 }
+            }
+
+
+
+
+            Card(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(5.dp)
+                    .clip(RoundedCornerShape(35.dp))
+
+                    .background(MaterialTheme.colorScheme.secondary)
+                    .clip(RoundedCornerShape(35.dp))
+
+                    .padding(PaddingDimensions.xLarge)
+            ) {
+                Text(
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.primary),
+                    text = index.toString(),
+                )
+            }
 
         }
     }
