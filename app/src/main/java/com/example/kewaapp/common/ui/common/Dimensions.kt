@@ -5,6 +5,7 @@ import androidx.compose.ui.unit.dp
 
 object Dimensions {
     val BigIconSize = 40.dp
+    val VeryBigIconSize = 50.dp
     val IconSize = 30.dp
 }
 

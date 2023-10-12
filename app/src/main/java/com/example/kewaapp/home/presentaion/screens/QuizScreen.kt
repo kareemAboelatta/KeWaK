@@ -41,12 +41,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kewaapp.common.ui.common.Dimensions.BigIconSize
+import com.example.kewaapp.common.ui.common.Dimensions.VeryBigIconSize
 import com.example.kewaapp.common.ui.common.PaddingDimensions
 import com.example.kewaapp.common.ui.components.GradientProgressbar
 import com.example.kewaapp.common.ui.theme.KewaAppTheme
@@ -124,7 +126,7 @@ fun QuizScreen(
                 ) {
                     if (pagerState.canScrollBackward)
                         IconButton(
-                            modifier = Modifier.size(BigIconSize),
+                            modifier = Modifier.size(VeryBigIconSize),
                             onClick = {
                                 coroutineScope.launch {
                                     pagerState.animateScrollToPage(pagerState.currentPage - 1)
@@ -133,13 +135,13 @@ fun QuizScreen(
                             Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
                         }
                     else
-                        Box(modifier = Modifier.size(BigIconSize))
+                        Box(modifier = Modifier.size(VeryBigIconSize))
 
 
 
                     if (pagerState.canScrollForward)
                         IconButton(
-                            modifier = Modifier.size(BigIconSize),
+                            modifier = Modifier.size(VeryBigIconSize),
                             onClick = {
 
                                 coroutineScope.launch {
@@ -152,7 +154,7 @@ fun QuizScreen(
                             )
                         }
                     else
-                        Box(modifier = Modifier.size(BigIconSize))
+                        Box(modifier = Modifier.size(VeryBigIconSize))
 
                 }
 
@@ -188,17 +190,15 @@ fun QuizPager(
         )
 
 
-
         QuizCard(
             modifier = Modifier
-                .padding(top = 20.dp)
+                .padding(top = 5.dp)
                 .fillMaxSize()
-                .clip(RoundedCornerShape(16.dp))
                 .scale(scale, scale)
                 .clip(
                     RoundedCornerShape(16.dp)
                 ),
-
+            index = index,
             question = list[index],
             isLast = (index == getQuestions().size - 1)
         )
@@ -234,92 +234,98 @@ fun QuizCard(
     index: Int = 0,
     isLast: Boolean = false
 ) {
-    Card(
-        modifier = modifier
-    ) {
-        Box(
-            contentAlignment = Alignment.BottomEnd
-        ) {
 
-            Column(
-                modifier = Modifier.padding(top = 20.dp).then(modifier)
-                    .then(
-                        Modifier.padding(vertical = 40.dp, horizontal = 10.dp)
-                    )
-                    .verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.Start,
+
+    Box(modifier = modifier) {
+
+
+        Card(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = PaddingDimensions.xxLarge + 12.dp)
+        ) {
+            Box(
+                contentAlignment = Alignment.BottomEnd
             ) {
 
-                Text(
-                    text = question.question,
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-                )
-
-                Spacer(Modifier.height(10.dp))
-
-                repeat(question.answers.size) { index ->
-                    Row(
-                        modifier = Modifier.clickable {
-                            viewModel.answerQuestion(questionId = question.questionId, index)
-                        },
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "$index.",
-                        )
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(PaddingDimensions.small),
-                            border = BorderStroke(
-                                width = 2.dp,
-                                color = if (question.selectedAnswer == index) MaterialTheme.colorScheme.primary
-                                else MaterialTheme.colorScheme.onPrimary
+                Column(
+                    modifier = Modifier
+                        .then(
+                            Modifier.padding(
+                                vertical = PaddingDimensions.xxLarge + 12.dp,
+                                horizontal = PaddingDimensions.small
                             )
+                        )
+                        .verticalScroll(rememberScrollState()),
+                    horizontalAlignment = Alignment.Start,
+                ) {
+
+                    Text(
+                        text = question.question,
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                    )
+
+                    Spacer(Modifier.height(10.dp))
+
+                    repeat(question.answers.size) { index ->
+                        Row(
+                            modifier = Modifier.clickable {
+                                viewModel.answerQuestion(questionId = question.questionId, index)
+                            },
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                modifier = Modifier.padding(PaddingDimensions.medium),
-                                text = question.answers[index],
-                                style = MaterialTheme.typography.bodyMedium
+                                text = "$index.",
                             )
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(PaddingDimensions.small),
+                                border = BorderStroke(
+                                    width = 2.dp,
+                                    color = if (question.selectedAnswer == index) MaterialTheme.colorScheme.primary
+                                    else MaterialTheme.colorScheme.onPrimary
+                                )
+                            ) {
+                                Text(
+                                    modifier = Modifier.padding(PaddingDimensions.medium),
+                                    text = question.answers[index],
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
                         }
+                    }
+
+
+                }
+
+                if (isLast) {
+                    FloatingActionButton(
+                        modifier = Modifier.padding(PaddingDimensions.xLarge),
+                        onClick = { /*TODO*/ }
+                    ) {
+                        Icon(imageVector = Icons.Filled.Done, contentDescription = "Submit")
                     }
                 }
 
 
             }
-
-            if (isLast) {
-                FloatingActionButton(
-                    modifier = Modifier.padding(PaddingDimensions.xLarge),
-                    onClick = { /*TODO*/ }
-                ) {
-                    Icon(imageVector = Icons.Filled.Done, contentDescription = "Submit")
-                }
-            }
-
-
-
-
-            Card(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(5.dp)
-                    .clip(RoundedCornerShape(35.dp))
-
-                    .background(MaterialTheme.colorScheme.secondary)
-                    .clip(RoundedCornerShape(35.dp))
-
-                    .padding(PaddingDimensions.xLarge)
-            ) {
-                Text(
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.primary),
-                    text = index.toString(),
-                )
-            }
-
         }
+
+
+        Text(
+            modifier = Modifier
+                .padding(top = PaddingDimensions.small)
+                .shadow(elevation = 20.dp)
+                .align(Alignment.TopCenter)
+                .clip(RoundedCornerShape(PaddingDimensions.large))
+                .background(MaterialTheme.colorScheme.background)
+                .padding(PaddingDimensions.large),
+            text = index.toString(),
+            style = MaterialTheme.typography.titleLarge
+        )
+
+
     }
 }
 
