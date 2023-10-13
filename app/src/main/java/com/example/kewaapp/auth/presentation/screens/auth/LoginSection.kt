@@ -1,6 +1,5 @@
 package com.example.kewaapp.auth.presentation.screens.auth
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,30 +23,20 @@ import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.kewaapp.common.NavConstants
 import com.example.kewaapp.common.ui.components.AppTextField
 import com.example.kewaapp.common.ui.components.PasswordTextField
-import com.example.kewaapp.common.ui.theme.KewaAppTheme
 
 
-@Preview(
-    showBackground = true
-)
-@Preview(
-    uiMode = UI_MODE_NIGHT_YES,
-)
-@Composable
-fun LoginSectionPreview() {
-    KewaAppTheme {
-        LoginSection()
-    }
-}
 
 @Composable
-fun LoginSection() {
+fun LoginSection( navController: NavHostController) {
 
     val state = rememberLoginDataState()
+
 
     Column(
         Modifier
@@ -88,6 +77,13 @@ fun LoginSection() {
                 .fillMaxWidth(),
             onClick = {
                 //viewModel.login()
+
+                navController.navigate(NavConstants.routeHome) {
+                    popUpTo(NavConstants.routeAuth) {
+                        inclusive = true
+                    }
+                }
+
             }
         ) {
             Text(

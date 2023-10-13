@@ -40,8 +40,9 @@ class QuizViewModel @Inject constructor() : ViewModel() {
     }
 
     fun getResult(): ResultOfExam {
-        val total = _questionsState.value.size
-        var result = 0
+        val total = _questionsState.value.size //20
+        var result = 0 // 18
+
         var incorrectAnswers = mutableListOf<String>()
 
         _questionsState.value.forEach {
@@ -51,10 +52,24 @@ class QuizViewModel @Inject constructor() : ViewModel() {
                 incorrectAnswers.add(it.questionId)
         }
 
-        return ResultOfExam(
-            total = total,
+
+        val percent = (result / total ) * 100
+
+
+        val numberOfCoinsForEachQuestion : Float = 500f / total  // 25
+
+
+
+        val earnCoins : Float = result * numberOfCoinsForEachQuestion
+
+
+        return  ResultOfExam(
+            total =  total,
             studentResult = result,
-            incorrectAnswers = incorrectAnswers
+            idsOfIncorrectAnswers = incorrectAnswers,
+            percent =percent,
+            earnedCoins =earnCoins.toInt()
+
         )
     }
 
@@ -64,7 +79,9 @@ class QuizViewModel @Inject constructor() : ViewModel() {
 data class ResultOfExam(
     val total: Int,
     val studentResult: Int,
-    val incorrectAnswers: List<String>
+    val idsOfIncorrectAnswers: List<String>,
+    val percent:Int,
+    val earnedCoins:Int
 )
 
 data class Question(
@@ -76,8 +93,6 @@ data class Question(
 
     ) {
     var selectedAnswer by mutableIntStateOf(initialAnswer)
-
-
 }
 
 fun getQuestions(): List<Question> {
@@ -121,7 +136,7 @@ fun getQuestions(): List<Question> {
             ),
             1
         ),
-/*
+
         Question(
             "q5",
             "What is the purpose of the 'AndroidManifest.xml' file?",
@@ -167,6 +182,7 @@ fun getQuestions(): List<Question> {
             ),
             1
         ),
+/*
         Question(
             "q10",
             "What is the purpose of the 'R' class in Android?",
@@ -273,6 +289,7 @@ fun getQuestions(): List<Question> {
             1
         )
 */
+
 
 
     )

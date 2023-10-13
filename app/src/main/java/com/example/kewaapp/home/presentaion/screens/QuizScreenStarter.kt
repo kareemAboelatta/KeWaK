@@ -34,7 +34,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.kewaapp.R
+import com.example.kewaapp.common.NavConstants
 import com.example.kewaapp.common.ui.common.PaddingDimensions
 import com.example.kewaapp.common.ui.components.GradientButton
 import com.example.kewaapp.common.ui.theme.KewaAppTheme
@@ -42,12 +44,8 @@ import com.example.kewaapp.common.ui.theme.KewaAppTheme
 
 
 
-//merged and fix bugs with git
-@Preview(
-    uiMode = UI_MODE_NIGHT_YES
-)
 @Composable
-fun QuizScreenStarter() {
+fun QuizScreenStarter(navController:NavHostController) {
     KewaAppTheme {
         Scaffold(
             topBar = { QuizAppBar() }, containerColor = MaterialTheme.colorScheme.background
@@ -74,7 +72,6 @@ fun QuizScreenStarter() {
                     contentDescription = null
                 )
 
-
                 val gradientColor = listOf(
                     MaterialTheme.colorScheme.tertiary,
                     MaterialTheme.colorScheme.secondary,
@@ -84,7 +81,12 @@ fun QuizScreenStarter() {
                     modifier = Modifier.padding(horizontal = 20.dp),
                     gradientColors = gradientColor,
                     text = "Start Quiz",
-                    onClick = {}
+                    onClick = {
+                        navController.navigate(
+                           "${NavConstants.HomeRoutes.routeQuizScreen}/quizId11",
+
+                        )
+                    }
                 )
             }
         }

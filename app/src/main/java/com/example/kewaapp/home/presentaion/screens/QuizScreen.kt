@@ -2,6 +2,7 @@ package com.example.kewaapp.home.presentaion.screens
 
 import android.content.res.Configuration
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -47,12 +48,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.modifier.modifierLocalOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.example.kewaapp.common.NavConstants
 import com.example.kewaapp.common.ui.common.Dimensions.BigIconSize
 import com.example.kewaapp.common.ui.common.Dimensions.VeryBigIconSize
 import com.example.kewaapp.common.ui.common.PaddingDimensions
@@ -63,137 +66,145 @@ import kotlin.math.absoluteValue
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
-@Preview(
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
 @Composable
 fun QuizScreen(
-    viewModel: QuizViewModel = viewModel()
+    navController: NavController,
+    quizId:String,
+    viewModel: QuizViewModel
 ) {
-
-    KewaAppTheme {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Row(
-                            Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                text = "Quiz",
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    },
-                    navigationIcon = {
-                        IconButton(
-                            modifier = Modifier
-                                .size(BigIconSize)
-                                .padding(5.dp),
-                            onClick = { /*TODO*/ }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.ArrowBack, contentDescription = ""
-                            )
-                        }
-                    })
-            },
-            containerColor = MaterialTheme.colorScheme.background,
-        ) {
-            val pagerState = rememberPagerState {
-                viewModel.questionsState.value.size
-            }
-            val isShowSubmit by remember {
-                derivedStateOf{
-                    pagerState.currentPage ==  viewModel.questionsState.value.size -1
-                }
-            }
-
-            Box(
-                contentAlignment = Alignment.BottomEnd
-            ){
-
-                Column(
-                    Modifier
-                        .fillMaxSize()
-                        .padding(it),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(PaddingDimensions.small)
-                ) {
-
-
-
-                    GradientProgressbar(
-                        modifier = Modifier.padding(10.dp),
-                        percentage = (((pagerState.currentPage + 1).toFloat() / getQuestions().size) * 100F)
-                    )
-
-                    QuizPager(
-                        modifier = Modifier.weight(1F),
-                        pagerState,
-                        list = viewModel.questionsState.value
-                    )
-
-                    val coroutineScope = rememberCoroutineScope()
-
-
-
-
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
                     Row(
-                        horizontalArrangement = Arrangement.SpaceAround
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
                     ) {
-                        AnimatedVisibility(visible = pagerState.canScrollBackward) {
-                            IconButton(
-                                onClick = {
-                                    coroutineScope.launch {
-                                        pagerState.animateScrollToPage(pagerState.currentPage - 1)
-                                    }
-                                }) {
-                                Icon(
-                                    modifier  =  Modifier.size(VeryBigIconSize),
-                                    imageVector = Icons.Filled.ArrowBack,
-                                    contentDescription = "Back")
-                            }
+                        Text(
+                            text = "Quiz",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                },
+                navigationIcon = {
+                    IconButton(
+                        modifier = Modifier
+                            .size(BigIconSize)
+                            .padding(5.dp),
+                        onClick = { /*TODO*/ }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack, contentDescription = ""
+                        )
+                    }
+                })
+        },
+        containerColor = MaterialTheme.colorScheme.background,
+    ) {
+        val pagerState = rememberPagerState {
+            viewModel.questionsState.value.size
+        }
+        val showSubmitButton by remember {
+            derivedStateOf {
+                pagerState.currentPage == viewModel.questionsState.value.size - 1
+            }
+        }
+
+
+
+        Box(
+            contentAlignment = Alignment.BottomEnd
+        ) {
+
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .padding(it),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(PaddingDimensions.small)
+            ) {
+
+
+                GradientProgressbar(
+                    modifier = Modifier.padding(10.dp),
+                    percentage = (((pagerState.currentPage + 1).toFloat() / getQuestions().size) * 100F)
+                )
+
+                QuizPager(
+                    modifier = Modifier.weight(1F),
+                    pagerState,
+                    list = viewModel.questionsState.value,
+                    viewModel=viewModel
+                )
+
+                val coroutineScope = rememberCoroutineScope()
+
+
+
+
+                Row(
+                    horizontalArrangement = Arrangement.SpaceAround
+                ) {
+                    AnimatedVisibility(visible = pagerState.canScrollBackward) {
+                        IconButton(
+                            onClick = {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                                }
+                            }) {
+                            Icon(
+                                modifier = Modifier.size(VeryBigIconSize),
+                                imageVector = Icons.Filled.ArrowBack,
+                                contentDescription = "Back"
+                            )
                         }
+                    }
 
 
 
-                        AnimatedVisibility(visible = pagerState.canScrollForward) {
-                            IconButton(
-                                onClick = {
-                                    coroutineScope.launch {
-                                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
-                                    }
-                                }) {
-                                Icon(
-                                    modifier  =  Modifier.size(VeryBigIconSize),
-                                    imageVector = Icons.Filled.ArrowForward,
-                                    contentDescription = "Next"
-                                )
-                            }
+                    AnimatedVisibility(visible = pagerState.canScrollForward) {
+                        IconButton(
+                            onClick = {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                                }
+                            }) {
+                            Icon(
+                                modifier = Modifier.size(VeryBigIconSize),
+                                imageVector = Icons.Filled.ArrowForward,
+                                contentDescription = "Next"
+                            )
                         }
-
                     }
 
                 }
 
-                AnimatedVisibility(visible = isShowSubmit) {
-                    FloatingActionButton(
-                        modifier = Modifier.padding(PaddingDimensions.xLarge),
-                        onClick = {
-
-                        }
-                    ) {
-                        Icon(imageVector = Icons.Filled.Done, contentDescription = "Submit")
-                    }
-                }
             }
 
+            val context = LocalContext.current
 
+            AnimatedVisibility(visible = showSubmitButton) {
+                FloatingActionButton(
+                    modifier = Modifier.padding(PaddingDimensions.xLarge),
+                    onClick = {
+                        val isAllQuestionsAnswered =viewModel.isAllQuestionsAnswered()
+                        if (isAllQuestionsAnswered){
+                            navController.navigate(NavConstants.HomeRoutes.routeQuizResultScreen)
+                        }else{
+
+                            Toast.makeText(context, "Answer all Questions", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                ) {
+                    Icon(imageVector = Icons.Filled.Done, contentDescription = "Submit")
+                }
+            }
         }
+
+
     }
+
 
 }
 
@@ -202,8 +213,8 @@ fun QuizScreen(
 fun QuizPager(
     modifier: Modifier = Modifier,
     pagerState: PagerState,
-    list: List<Question>
-
+    list: List<Question>,
+    viewModel: QuizViewModel,
 ) {
 
 
@@ -233,18 +244,8 @@ fun QuizPager(
                 ),
             index = index,
             question = list[index],
+            viewModel = viewModel
         )
-    }
-}
-
-
-@Preview(
-    uiMode = UI_MODE_NIGHT_YES
-)
-@Composable
-fun QuizCardPrev() {
-    KewaAppTheme {
-        QuizCard()
     }
 }
 
@@ -262,7 +263,7 @@ fun QuizCard(
         ),
         0
     ),
-    viewModel: QuizViewModel = viewModel(),
+    viewModel: QuizViewModel,
     index: Int = 0,
     isLast: Boolean = false
 ) {
@@ -305,7 +306,7 @@ fun QuizCard(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "$index.",
+                                text = "${index + 1}.",
                             )
                             Card(
                                 modifier = Modifier
@@ -341,7 +342,7 @@ fun QuizCard(
                 .clip(RoundedCornerShape(PaddingDimensions.large))
                 .background(MaterialTheme.colorScheme.background)
                 .padding(PaddingDimensions.large),
-            text = index.toString(),
+            text = (index + 1).toString(),
             style = MaterialTheme.typography.titleLarge
         )
 

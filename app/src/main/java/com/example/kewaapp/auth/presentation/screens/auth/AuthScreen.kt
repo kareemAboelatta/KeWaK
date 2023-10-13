@@ -67,6 +67,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.os.ConfigurationCompat
+import androidx.navigation.NavHostController
 import com.example.kewaapp.R
 import com.example.kewaapp.common.ui.common.Dimensions.IconSize
 import com.example.kewaapp.common.ui.common.PaddingDimensions
@@ -93,6 +94,7 @@ fun AuthScreenPreview() {
 @Composable
 fun AuthScreen(
     modifier: Modifier = Modifier,
+    navController: NavHostController
     // viewModel: MainViewModel = viewModel(),
 ) {
 
@@ -104,7 +106,10 @@ fun AuthScreen(
         sheetTonalElevation = 10.dp,
         sheetPeekHeight = 130.dp,
         sheetContent = {
-            BottomSheetBody(scaffoldState)
+            BottomSheetBody(
+                navController=navController,
+                scaffoldState= scaffoldState
+            )
         }) {
         Box {
             AuthBackground()
@@ -114,11 +119,9 @@ fun AuthScreen(
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
-@Preview(
-    showSystemUi = true
-)
 @Composable
 fun BottomSheetBody(
+    navController: NavHostController,
     scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
 ) {
     Column(
@@ -147,7 +150,7 @@ fun BottomSheetBody(
             label = "Animated Content",
         ) { targetState ->
             when (selectedTap) {
-                AuthScreens.Login -> LoginSection()
+                AuthScreens.Login -> LoginSection(navController = navController)
                 AuthScreens.Register -> RegisterSection()
             }
         }
