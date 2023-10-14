@@ -129,4 +129,7 @@ dependencies {
 
 
 
+    implementation ("io.github.being-eyram:iconsax-android:1.0.0")
+
+
 }

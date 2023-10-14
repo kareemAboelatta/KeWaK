@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.example.chat"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 24
@@ -125,6 +125,7 @@ dependencies {
     implementation( "androidx.navigation:navigation-compose:2.7.4")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
 
+    implementation ("io.github.being-eyram:iconsax-android:1.0.0")
 
 
 }
