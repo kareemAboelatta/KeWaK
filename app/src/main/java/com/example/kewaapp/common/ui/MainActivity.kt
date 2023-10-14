@@ -4,13 +4,8 @@ package com.example.kewaapp.common.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
@@ -21,10 +16,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.chat.ChatScreen
 import com.example.kewaapp.common.domain.entities.User
 import com.example.kewaapp.auth.presentation.screens.auth.AuthScreen
-import com.example.kewaapp.auth.presentation.screens.LandingScreen
-import com.example.kewaapp.auth.presentation.screens.auth.LoginSection
 import com.example.kewaapp.common.NavConstants
 import com.example.kewaapp.common.ui.theme.KewaAppTheme
 import com.example.kewaapp.home.presentaion.screens.QuizResultScreen
@@ -50,13 +44,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             KewaAppTheme {
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = NavConstants.routeHome) {
+                NavHost(navController = navController, startDestination = NavConstants.routeNameHome) {
                     composable("about") {
 
                     }
                     navigation(
                         startDestination = "login",
-                        route = NavConstants.routeAuth
+                        route = NavConstants.routeNameAuth
                     ) {
                         composable("login") {
                             AuthScreen(navController = navController)
@@ -74,8 +68,8 @@ class MainActivity : ComponentActivity() {
 
 
                     navigation(
-                        startDestination = NavConstants.HomeRoutes.routeQuizScreenStarter,
-                        route = NavConstants.routeHome
+                        startDestination = NavConstants.HomeRoutes.routeNameQuizScreenStarter,
+                        route = NavConstants.routeNameHome
                     ) {
 
 
@@ -84,7 +78,7 @@ class MainActivity : ComponentActivity() {
                             QuizScreenStarter(navController)
                         }
                         composable(
-                            "${NavConstants.HomeRoutes.routeQuizScreen}/{quizId}",
+                            "${NavConstants.HomeRoutes.routeNameQuizScreen}/{quizId}",
                             arguments = listOf(navArgument("quizId") { type = NavType.StringType })
 
                         ) {backStackEntry ->
@@ -100,11 +94,24 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                         }
-                        composable(NavConstants.HomeRoutes.routeQuizResultScreen) {
+                        composable(NavConstants.HomeRoutes.routeNameQuizResultScreen) {
                             val viewModel = it.sharedViewModel<QuizViewModel>(navController)
 
                             QuizResultScreen(viewModel)
                         }
+                    }
+
+
+
+                    navigation(
+                        startDestination = NavConstants.ChatRoutes.routeNameChatScreen,
+                        route = NavConstants.routeNameChat
+                    ) {
+
+                        composable(NavConstants.ChatRoutes.routeNameChatScreen) {
+                            ChatScreen()
+                        }
+
                     }
 
 

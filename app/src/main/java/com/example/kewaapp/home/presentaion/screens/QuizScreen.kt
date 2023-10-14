@@ -1,7 +1,5 @@
 package com.example.kewaapp.home.presentaion.screens
 
-import android.content.res.Configuration
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
@@ -50,17 +48,14 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.kewaapp.common.NavConstants
 import com.example.kewaapp.common.ui.common.Dimensions.BigIconSize
 import com.example.kewaapp.common.ui.common.Dimensions.VeryBigIconSize
 import com.example.kewaapp.common.ui.common.PaddingDimensions
 import com.example.kewaapp.common.ui.components.GradientProgressbar
-import com.example.kewaapp.common.ui.theme.KewaAppTheme
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
@@ -190,7 +185,7 @@ fun QuizScreen(
                     onClick = {
                         val isAllQuestionsAnswered =viewModel.isAllQuestionsAnswered()
                         if (isAllQuestionsAnswered){
-                            navController.navigate(NavConstants.HomeRoutes.routeQuizResultScreen)
+                            navController.navigate(NavConstants.HomeRoutes.routeNameQuizResultScreen)
                         }else{
 
                             Toast.makeText(context, "Answer all Questions", Toast.LENGTH_SHORT).show()

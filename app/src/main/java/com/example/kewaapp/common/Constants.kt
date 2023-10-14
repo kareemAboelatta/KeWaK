@@ -3,22 +3,26 @@ package com.example.kewaapp.common
 
 object NavConstants {
 
-    const val routeAuth = "auth"
+    const val routeNameAuth = "auth"
 
-    const val routeHome = "home"
+    const val routeNameHome = "home"
+    const val routeNameChat = "chat"
+
     object AuthRoutes{
         const val routeAuthScreen = "AuthScreen"
         const val routeForgetPasswordScreen = "ForgetPasswordScreen"
     }
 
     object HomeRoutes{
+        const val routeNameQuizScreenStarter = "QuizScreenStarter"
+        const val routeNameQuizScreen =  "QuizScreen"
+        const val routeNameQuizResultScreen =   "QuizResultScreen"
 
-        const val routeQuizScreenStarter = "QuizScreenStarter"
+    }
 
-        const val routeQuizScreen =  "QuizScreen"
 
-        const val routeQuizResultScreen =   "QuizResultScreen"
-
+    object ChatRoutes{
+        const val routeNameChatScreen = "ChatScreen"
 
     }
 

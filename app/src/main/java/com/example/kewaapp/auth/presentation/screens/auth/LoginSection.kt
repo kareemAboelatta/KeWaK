@@ -25,7 +25,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.kewaapp.common.NavConstants
 import com.example.kewaapp.common.ui.components.AppTextField
 import com.example.kewaapp.common.ui.components.PasswordTextField
@@ -78,8 +77,8 @@ fun LoginSection( navController: NavHostController) {
             onClick = {
                 //viewModel.login()
 
-                navController.navigate(NavConstants.routeHome) {
-                    popUpTo(NavConstants.routeAuth) {
+                navController.navigate(NavConstants.routeNameHome) {
+                    popUpTo(NavConstants.routeNameAuth) {
                         inclusive = true
                     }
                 }

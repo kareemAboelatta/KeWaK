@@ -83,7 +83,7 @@ fun QuizScreenStarter(navController:NavHostController) {
                     text = "Start Quiz",
                     onClick = {
                         navController.navigate(
-                           "${NavConstants.HomeRoutes.routeQuizScreen}/quizId11",
+                           "${NavConstants.HomeRoutes.routeNameQuizScreen}/quizId11",
 
                         )
                     }
