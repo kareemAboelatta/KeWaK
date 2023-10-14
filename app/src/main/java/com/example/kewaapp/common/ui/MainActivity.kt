@@ -114,9 +114,6 @@ class MainActivity : ComponentActivity() {
 
                     }
 
-
-
-                    //Todo add chat navigation
                 }
             }
         }
