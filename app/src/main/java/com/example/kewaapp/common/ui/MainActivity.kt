@@ -100,7 +100,7 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                         }
-                        composable("QuizResultScreen") {
+                        composable(NavConstants.HomeRoutes.routeQuizResultScreen) {
                             val viewModel = it.sharedViewModel<QuizViewModel>(navController)
 
                             QuizResultScreen(viewModel)

@@ -20,7 +20,6 @@ import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -30,7 +29,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -103,12 +101,11 @@ fun QuizResultScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(PaddingDimensions.xxLarge),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.onPrimary,
-                ),
+
                 elevation = CardDefaults.cardElevation(
                     defaultElevation = 6.dp
-                ),            ) {
+                ),
+            ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -123,7 +120,9 @@ fun QuizResultScreen(
                     )
                     Text(
                         text = "Congrats",
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontWeight = FontWeight.Bold
+                        )
                     )
 
                     Text(
@@ -139,7 +138,9 @@ fun QuizResultScreen(
 
                     Text(
                         text = "Quiz completed successfully",
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontWeight = FontWeight.Bold
+                        )
                     )
 
                     Row {
@@ -158,7 +159,10 @@ fun QuizResultScreen(
 
                     Text(
                         text = "Earned coins",
-                        style = MaterialTheme.typography.bodyMedium
+
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontWeight = FontWeight.Bold
+                        )
                     )
 
 
@@ -183,15 +187,29 @@ fun QuizResultScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Button(
+
                             modifier = Modifier.clip(RoundedCornerShape(PaddingDimensions.small)),
+                            shape = RoundedCornerShape(PaddingDimensions.small),
                             onClick = { /*TODO*/ }) {
                             Icon(imageVector = Icons.Filled.Share, contentDescription = "share")
-                            Text(text = "Share Result")
+                            Text(
+                                text = "Share Result",
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    fontWeight = FontWeight.Bold
+                                )
+                            )
                         }
                         Spacer(modifier = Modifier.width(PaddingDimensions.small))
                         ElevatedButton(
+                            shape = RoundedCornerShape(PaddingDimensions.small),
                             onClick = { /*TODO*/ }) {
-                            Text(text = "Take new quiz")
+                            Text(
+                                text = "Take new quiz",
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    fontWeight = FontWeight.Bold
+                                )
+
+                            )
                         }
 
                     }

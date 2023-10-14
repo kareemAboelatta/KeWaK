@@ -52,17 +52,11 @@ class QuizViewModel @Inject constructor() : ViewModel() {
                 incorrectAnswers.add(it.questionId)
         }
 
-
         val percent = (result / total ) * 100
-
 
         val numberOfCoinsForEachQuestion : Float = 500f / total  // 25
 
-
-
         val earnCoins : Float = result * numberOfCoinsForEachQuestion
-
-
         return  ResultOfExam(
             total =  total,
             studentResult = result,
