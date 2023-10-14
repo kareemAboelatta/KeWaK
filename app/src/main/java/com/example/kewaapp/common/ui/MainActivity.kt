@@ -106,6 +106,10 @@ class MainActivity : ComponentActivity() {
                             QuizResultScreen(viewModel)
                         }
                     }
+
+
+
+                    //Todo add chat navigation
                 }
             }
         }
