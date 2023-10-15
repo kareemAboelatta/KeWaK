@@ -1,6 +1,6 @@
 
 
-package com.example.chat.common.theme
+package com.example.common.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Shapes

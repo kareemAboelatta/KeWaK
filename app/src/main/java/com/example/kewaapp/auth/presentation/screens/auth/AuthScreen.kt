@@ -68,11 +68,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.os.ConfigurationCompat
 import androidx.navigation.NavHostController
+import com.example.common.common.Dimensions.IconSize
+import com.example.common.common.PaddingDimensions
+import com.example.common.theme.KewaAppTheme
 import com.example.kewaapp.R
-import com.example.kewaapp.common.ui.common.Dimensions.IconSize
-import com.example.kewaapp.common.ui.common.PaddingDimensions
+
 import com.example.kewaapp.common.ui.components.animations.InfinitelyScaling
-import com.example.kewaapp.common.ui.theme.KewaAppTheme
 
 enum class AuthScreens {
     Login, Register

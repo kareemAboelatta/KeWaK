@@ -76,17 +76,16 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.chat.common.theme.KewaAppTheme
 import com.example.chat.components.JetchatAppBar
 import com.example.chat.components.JumpToBottom
 import com.example.chat.components.SymbolAnnotationType
 import com.example.chat.components.messageFormatter
 import com.example.compose.jetchat.conversation.UserInput
 import com.example.chat.data.exampleUiState
+import com.example.common.theme.KewaAppTheme
 import kotlinx.coroutines.launch
 
 

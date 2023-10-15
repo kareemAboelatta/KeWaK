@@ -17,10 +17,10 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.chat.ChatScreen
+import com.example.common.theme.KewaAppTheme
 import com.example.kewaapp.common.domain.entities.User
 import com.example.kewaapp.auth.presentation.screens.auth.AuthScreen
 import com.example.kewaapp.common.NavConstants
-import com.example.kewaapp.common.ui.theme.KewaAppTheme
 import com.example.kewaapp.home.presentaion.screens.QuizResultScreen
 import com.example.kewaapp.home.presentaion.screens.QuizScreen
 import com.example.kewaapp.home.presentaion.screens.QuizScreenStarter

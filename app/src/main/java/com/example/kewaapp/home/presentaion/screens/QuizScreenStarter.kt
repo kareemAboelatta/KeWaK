@@ -35,13 +35,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.common.common.PaddingDimensions
+import com.example.common.components.GradientButton
+import com.example.common.theme.KewaAppTheme
 import com.example.kewaapp.R
 import com.example.kewaapp.common.NavConstants
-import com.example.kewaapp.common.ui.common.PaddingDimensions
-import com.example.kewaapp.common.ui.components.GradientButton
-import com.example.kewaapp.common.ui.theme.KewaAppTheme
-
-
 
 
 @Composable

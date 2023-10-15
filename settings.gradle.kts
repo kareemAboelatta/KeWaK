@@ -18,3 +18,4 @@ dependencyResolutionManagement {
 rootProject.name = "Kewa App"
 include(":app")
 include(":Chat")
+include(":common")

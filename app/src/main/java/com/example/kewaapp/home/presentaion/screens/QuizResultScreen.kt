@@ -42,10 +42,11 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.example.common.common.Dimensions
+import com.example.common.common.Dimensions.IconSize
+import com.example.common.common.PaddingDimensions
 import com.example.kewaapp.R
-import com.example.kewaapp.common.ui.common.Dimensions
-import com.example.kewaapp.common.ui.common.Dimensions.IconSize
-import com.example.kewaapp.common.ui.common.PaddingDimensions
+
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)

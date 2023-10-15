@@ -1,4 +1,4 @@
-package com.example.kewaapp.common.ui.common
+package com.example.common.common
 
 import androidx.compose.ui.unit.dp
 

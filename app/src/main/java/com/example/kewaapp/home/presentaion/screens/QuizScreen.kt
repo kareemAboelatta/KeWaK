@@ -51,10 +51,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.navigation.NavController
+import com.example.common.common.Dimensions.BigIconSize
+import com.example.common.common.Dimensions.VeryBigIconSize
+import com.example.common.common.PaddingDimensions
 import com.example.kewaapp.common.NavConstants
-import com.example.kewaapp.common.ui.common.Dimensions.BigIconSize
-import com.example.kewaapp.common.ui.common.Dimensions.VeryBigIconSize
-import com.example.kewaapp.common.ui.common.PaddingDimensions
+
 import com.example.kewaapp.common.ui.components.GradientProgressbar
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue

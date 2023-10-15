@@ -1,4 +1,4 @@
-package com.example.kewaapp.common.ui.components
+package com.example.common.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

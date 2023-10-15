@@ -28,9 +28,9 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.common.theme.KewaAppTheme
 import com.example.kewaapp.common.ui.components.AppTextField
 import com.example.kewaapp.common.ui.components.PasswordTextField
-import com.example.kewaapp.common.ui.theme.KewaAppTheme
 
 
 @Preview(
