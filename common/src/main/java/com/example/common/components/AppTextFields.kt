@@ -1,4 +1,4 @@
-package com.example.kewaapp.common.ui.components
+package com.example.common.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
@@ -24,7 +24,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.sp
-import com.example.kewaapp.R
+import com.example.common.R
 
 @Composable
 fun AppTextField(
