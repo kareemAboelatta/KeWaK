@@ -109,7 +109,7 @@ class MainActivity : ComponentActivity() {
                     ) {
 
                         composable(NavConstants.ChatRoutes.routeNameChatScreen) {
-                            ChatScreen()
+                            ChatScreen(navController = navController)
                         }
 
                     }
