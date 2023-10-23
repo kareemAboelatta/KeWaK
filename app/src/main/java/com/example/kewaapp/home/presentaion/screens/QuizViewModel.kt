@@ -176,7 +176,6 @@ fun getQuestions(): List<Question> {
             ),
             1
         ),
-/*
         Question(
             "q10",
             "What is the purpose of the 'R' class in Android?",
@@ -282,7 +281,6 @@ fun getQuestions(): List<Question> {
             ),
             1
         )
-*/
 
 
 

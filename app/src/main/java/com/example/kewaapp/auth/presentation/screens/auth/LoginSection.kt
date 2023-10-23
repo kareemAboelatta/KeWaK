@@ -25,9 +25,9 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.common.components.AppTextField
+import com.example.common.components.PasswordTextField
 import com.example.kewaapp.common.NavConstants
-import com.example.kewaapp.common.ui.components.AppTextField
-import com.example.kewaapp.common.ui.components.PasswordTextField
 
 
 

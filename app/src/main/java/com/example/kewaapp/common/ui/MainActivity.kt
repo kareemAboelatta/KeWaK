@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             KewaAppTheme {
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = NavConstants.routeNameHome) {
+                NavHost(navController = navController, startDestination = NavConstants.routeNameChat) {
                     composable("about") {
 
                     }
