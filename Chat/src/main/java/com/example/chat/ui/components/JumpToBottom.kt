@@ -1,5 +1,5 @@
 
-package com.example.chat.components
+package com.example.chat.ui.components
 
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.updateTransition

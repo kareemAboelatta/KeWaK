@@ -109,7 +109,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.chat.FunctionalityNotAvailablePopup
-import com.example.chat.components.RecordButton
+import com.example.chat.ui.components.RecordButton
 import kotlin.math.absoluteValue
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds

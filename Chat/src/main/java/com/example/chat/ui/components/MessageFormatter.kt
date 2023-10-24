@@ -1,5 +1,5 @@
 
-package com.example.chat.components
+package com.example.chat.ui.components
 
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme

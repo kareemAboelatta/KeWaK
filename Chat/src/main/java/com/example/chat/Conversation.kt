@@ -79,10 +79,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.chat.components.JetchatAppBar
-import com.example.chat.components.JumpToBottom
-import com.example.chat.components.SymbolAnnotationType
-import com.example.chat.components.messageFormatter
+import com.example.chat.ui.components.JetchatAppBar
+import com.example.chat.ui.components.JumpToBottom
+import com.example.chat.ui.components.SymbolAnnotationType
+import com.example.chat.ui.components.messageFormatter
 import com.example.compose.jetchat.conversation.UserInput
 import com.example.chat.data.exampleUiState
 import com.example.common.theme.KewaAppTheme
@@ -450,6 +450,9 @@ fun ChatItemBubble(
         }
     }
 }
+
+
+
 
 @Composable
 fun ClickableMessage(

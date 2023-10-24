@@ -1,5 +1,5 @@
 
-package com.example.chat.components
+package com.example.chat.ui.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.Icon

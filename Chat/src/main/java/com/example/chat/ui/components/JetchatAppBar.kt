@@ -2,7 +2,7 @@
 
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.example.chat.components
+package com.example.chat.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.RowScope

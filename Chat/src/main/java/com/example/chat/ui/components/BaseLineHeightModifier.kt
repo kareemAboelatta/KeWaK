@@ -1,6 +1,6 @@
 
 
-package com.example.chat.components
+package com.example.chat.ui.components
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.FirstBaseline

@@ -1,6 +1,6 @@
 
 
-package com.example.chat.components
+package com.example.chat.ui.components
 
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.Spring
