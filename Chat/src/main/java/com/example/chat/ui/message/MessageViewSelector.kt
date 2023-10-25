@@ -6,7 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -43,7 +42,6 @@ import com.example.chat.fakeMessages
 import com.example.chat.ui.components.SymbolAnnotationType
 import com.example.chat.ui.components.messageFormatter
 import com.example.common.common.Dimensions.BigIconSize
-import com.example.common.common.Dimensions.IconSize
 import com.example.common.common.PaddingDimensions
 import io.eyram.iconsax.IconSax
 
@@ -71,9 +69,9 @@ fun DisplayMessageView(message: Message = fakeMessages[5]) {
         MaterialTheme.colorScheme.surfaceVariant
     }
 
-    Column (
+    Column(
         modifier = Modifier.padding(PaddingDimensions.large)
-    ){
+    ) {
         Surface(
             color = backgroundBubbleColor,
             shape = ChatBubbleShape
@@ -167,7 +165,8 @@ fun DisplayPdfMessage(message: PdfMessage) {
             contentDescription = "PDF Icon",
             contentScale = ContentScale.Fit,
             modifier = Modifier
-                .size(BigIconSize).background(Color.Transparent),  // Define the size of the PDF icon. Adjust as needed.
+                .size(BigIconSize)
+                .background(Color.Transparent),  // Define the size of the PDF icon. Adjust as needed.
         )
 
         Spacer(modifier = Modifier.height(4.dp)) // Spacing between icon and title
@@ -202,9 +201,10 @@ fun DisplayVideoMessage(message: VideoMessage) {
             message.thumbnailUrl,
             contentDescription = "Video Thumbnail",
             contentScale = ContentScale.Crop, // Crop the image to fit
-            modifier = Modifier.graphicsLayer {
-                alpha = 0.6f
-            },
+            modifier = Modifier
+                .graphicsLayer {
+                    alpha = 0.2f
+                },
         )
 
         // Overlay a play button in the center

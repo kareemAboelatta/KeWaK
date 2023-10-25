@@ -1,20 +1,5 @@
-/*
- * Copyright 2020 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
-package com.example.compose.jetchat.conversation
+package com.example.chat.ui.components
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
@@ -59,7 +44,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Call
 import androidx.compose.material.icons.outlined.Email
-
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material.icons.rounded.Settings
@@ -109,11 +93,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.chat.FunctionalityNotAvailablePopup
-import com.example.chat.ui.components.RecordButton
+import kotlinx.coroutines.delay
 import kotlin.math.absoluteValue
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
-import kotlinx.coroutines.delay
 
 enum class InputSelector {
     NONE,
@@ -256,7 +239,7 @@ fun FunctionalityNotAvailablePanel() {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text =" not_available",
+                text = " not_available",
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
@@ -294,7 +277,7 @@ private fun UserInputSelector(
             onClick = { onSelectorChange(InputSelector.DM) },
             icon = Icons.Outlined.Email,
             selected = currentInputSelector == InputSelector.DM,
-            description ="dm_desc"
+            description = "dm_desc"
         )
         InputSelectorButton(
             onClick = { onSelectorChange(InputSelector.PICTURE) },
@@ -306,7 +289,7 @@ private fun UserInputSelector(
             onClick = { onSelectorChange(InputSelector.MAP) },
             icon = Icons.Outlined.Place,
             selected = currentInputSelector == InputSelector.MAP,
-            description ="map_selector_desc"
+            description = "map_selector_desc"
         )
         InputSelectorButton(
             onClick = { onSelectorChange(InputSelector.PHONE) },
@@ -588,7 +571,7 @@ fun EmojiSelector(
                 .padding(horizontal = 8.dp)
         ) {
             ExtendedSelectorInnerButton(
-                text ="emojis_label",
+                text = "emojis_label",
                 onClick = { selected = EmojiStickerSelector.EMOJI },
                 selected = true,
                 modifier = Modifier.weight(1f)
