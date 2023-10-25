@@ -18,7 +18,9 @@ data class PhotoMessage(
     override val id: String,
     override val sender: User,
     override val timestamp: Long,
-    val photoUrl: String
+    val photoUrl: String,
+    val text: String
+
 ) : Message()
 
 // Continue for PDF, Video, Quiz, etc.

@@ -84,7 +84,9 @@ import com.example.chat.ui.components.JumpToBottom
 import com.example.chat.ui.components.SymbolAnnotationType
 import com.example.chat.ui.components.messageFormatter
 import com.example.compose.jetchat.conversation.UserInput
-import com.example.chat.data.exampleUiState
+import com.example.chat.domain.model.Message
+import com.example.chat.ui.message.DisplayMessage
+import com.example.chat.ui.message.DisplayMessageView
 import com.example.common.theme.KewaAppTheme
 import kotlinx.coroutines.launch
 
@@ -134,7 +136,7 @@ fun ConversationContent(
             UserInput(
                 onMessageSent = { content ->
                     uiState.addMessage(
-                        Message(authorMe, content, timeNow)
+                        fakeMessages.random()
                     )
                 },
                 resetScroll = {
@@ -220,8 +222,6 @@ fun Messages(
 ) {
     val scope = rememberCoroutineScope()
     Box(modifier = modifier) {
-
-        val authorMe = "author_me"
         LazyColumn(
             reverseLayout = true,
             state = scrollState,
@@ -230,11 +230,7 @@ fun Messages(
                 .fillMaxSize()
         ) {
             for (index in messages.indices) {
-                val prevAuthor = messages.getOrNull(index - 1)?.author
-                val nextAuthor = messages.getOrNull(index + 1)?.author
-                val content = messages[index]
-                val isFirstMessageByAuthor = prevAuthor != content.author
-                val isLastMessageByAuthor = nextAuthor != content.author
+                val message = messages[index]
 
                 // Hardcode day dividers for simplicity
                 if (index == messages.size - 1) {
@@ -248,13 +244,7 @@ fun Messages(
                 }
 
                 item {
-                    Message(
-                        onAuthorClick = { name -> navigateToProfile(name) },
-                        msg = content,
-                        isUserMe = content.author == authorMe,
-                        isFirstMessageByAuthor = isFirstMessageByAuthor,
-                        isLastMessageByAuthor = isLastMessageByAuthor
-                    )
+                    DisplayMessageView(message = message)
                 }
             }
         }
@@ -285,6 +275,7 @@ fun Messages(
         )
     }
 }
+/*
 
 @Composable
 fun Message(
@@ -306,7 +297,6 @@ fun Message(
             // Avatar
             Image(
                 modifier = Modifier
-                    .clickable(onClick = { onAuthorClick(msg.author) })
                     .padding(horizontal = 16.dp)
                     .size(42.dp)
                     .border(1.5.dp, borderColor, CircleShape)
@@ -334,6 +324,7 @@ fun Message(
     }
 }
 
+
 @Composable
 fun AuthorAndTextMessage(
     msg: Message,
@@ -357,13 +348,14 @@ fun AuthorAndTextMessage(
         }
     }
 }
+*/
 
 @Composable
 private fun AuthorNameTimestamp(msg: Message) {
     // Combine author and timestamp for a11y.
     Row(modifier = Modifier.semantics(mergeDescendants = true) {}) {
         Text(
-            text = msg.author,
+            text = msg.sender.username,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier
                 .alignBy(LastBaseline)
@@ -371,7 +363,7 @@ private fun AuthorNameTimestamp(msg: Message) {
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = msg.timestamp,
+            text = msg.timestamp.toString(),
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier.alignBy(LastBaseline),
             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -379,7 +371,7 @@ private fun AuthorNameTimestamp(msg: Message) {
     }
 }
 
-private val ChatBubbleShape = RoundedCornerShape(4.dp, 20.dp, 20.dp, 20.dp)
+val ChatBubbleShape = RoundedCornerShape(4.dp, 20.dp, 20.dp, 20.dp)
 
 @Composable
 fun DayHeader(dayString: String) {
@@ -409,93 +401,12 @@ private fun RowScope.DayHeaderLine() {
     )
 }
 
-@Composable
-fun ChatItemBubble(
-    message: Message,
-    isUserMe: Boolean,
-    authorClicked: (String) -> Unit
-) {
-
-    val backgroundBubbleColor = if (isUserMe) {
-        MaterialTheme.colorScheme.primary
-    } else {
-        MaterialTheme.colorScheme.surfaceVariant
-    }
-
-    Column {
-        Surface(
-            color = backgroundBubbleColor,
-            shape = ChatBubbleShape
-        ) {
-            ClickableMessage(
-                message = message,
-                isUserMe = isUserMe,
-                authorClicked = authorClicked
-            )
-        }
-
-        message.image?.let {
-            Spacer(modifier = Modifier.height(4.dp))
-            Surface(
-                color = backgroundBubbleColor,
-                shape = ChatBubbleShape
-            ) {
-                Image(
-                    painter = painterResource(it),
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier.size(160.dp),
-                    contentDescription = "attached_image"
-                )
-            }
-        }
-    }
-}
 
 
 
 
-@Composable
-fun ClickableMessage(
-    message: Message,
-    isUserMe: Boolean,
-    authorClicked: (String) -> Unit
-) {
-    val uriHandler = LocalUriHandler.current
 
-    val styledMessage = messageFormatter(
-        text = message.content,
-        primary = isUserMe
-    )
 
-    ClickableText(
-        text = styledMessage,
-        style = MaterialTheme.typography.bodyLarge.copy(color = LocalContentColor.current),
-        modifier = Modifier.padding(16.dp),
-        onClick = {
-            styledMessage
-                .getStringAnnotations(start = it, end = it)
-                .firstOrNull()
-                ?.let { annotation ->
-                    when (annotation.tag) {
-                        SymbolAnnotationType.LINK.name -> uriHandler.openUri(annotation.item)
-                        SymbolAnnotationType.PERSON.name -> authorClicked(annotation.item)
-                        else -> Unit
-                    }
-                }
-        }
-    )
-}
-
-@Preview
-@Composable
-fun ConversationPreview() {
-    KewaAppTheme {
-        ConversationContent(
-            uiState = exampleUiState,
-            navigateToProfile = { }
-        )
-    }
-}
 
 @Preview
 @Composable
